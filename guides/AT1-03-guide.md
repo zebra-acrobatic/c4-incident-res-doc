@@ -4,8 +4,6 @@ This task will require:
 1. The three CSV files described in the document.
 2. [Azure data explorer](https://dataexplorer.azure.com/).
 
-https://markdownlivepreview.com/
-
 ## KQL Queries
 You can use the KQL examples below to quickly learn the basics of Kusto Query Language (KQL) syntax. Each example shows how to select, filter, join, and summarise data, helping you understand how to write queries for Azure Data Explorer and similar platforms. Try running and modifying these queries to get comfortable with KQL’s structure and capabilities.
 
