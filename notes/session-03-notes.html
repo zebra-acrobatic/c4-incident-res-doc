@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KQL Revision Notes - Australian Edition</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+            font-size: 1.3em;
+            position: relative;
+        }
+        
+        h3::before {
+            content: "▶ ";
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        p, li {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        pre {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        pre::before {
+            content: "KQL";
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #95a5a6;
+            background: rgba(52, 152, 219, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        code {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: #2980b9;
+            font-weight: bold;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(155, 89, 182, 0.1));
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+            border-left: 5px solid #2ecc71;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .example-box {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(243, 156, 18, 0.1));
+            border-left: 5px solid #f1c40f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .syntax {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+            border: 1px solid #9b59b6;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            color: #8e44ad;
+            font-weight: bold;
+        }
+        
+        strong {
+            color: #e74c3c;
+        }
+        
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .command-card {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(155, 89, 182, 0.05));
+            border: 1px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            pre {
+                font-size: 0.9em;
+            }
+            
+            .command-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Print to PDF Button Styles */
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .print-button:active {
+            transform: translateY(0);
+        }
+        
+        .print-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            
+            .container {
+                box-shadow: none !important;
+                border: none !important;
+                background: white !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                max-width: none !important;
+            }
+            
+            .print-button {
+                display: none !important;
+            }
+            
+            h1 {
+                color: black !important;
+                background: none !important;
+                -webkit-text-fill-color: black !important;
+                text-shadow: none !important;
+                font-size: 24pt !important;
+                margin-bottom: 20pt !important;
+            }
+            
+            h2 {
+                color: black !important;
+                border-bottom: 2px solid black !important;
+                font-size: 18pt !important;
+                margin-top: 20pt !important;
+                page-break-after: avoid;
+            }
+            
+            h3 {
+                color: black !important;
+                font-size: 14pt !important;
+                margin-top: 15pt !important;
+                page-break-after: avoid;
+            }
+            
+            h3::before {
+                color: black !important;
+            }
+            
+            pre {
+                background: #f5f5f5 !important;
+                color: black !important;
+                border: 1px solid #ddd !important;
+                padding: 10pt !important;
+                font-size: 9pt !important;
+                line-height: 1.3 !important;
+                page-break-inside: avoid;
+                margin: 10pt 0 !important;
+            }
+            
+            pre::before {
+                color: #666 !important;
+                background: #e0e0e0 !important;
+            }
+            
+            code {
+                background: #f0f0f0 !important;
+                color: black !important;
+                font-size: 10pt !important;
+            }
+            
+            .highlight-box, .tip-box, .example-box, .command-card {
+                background: white !important;
+                border: 1px solid #ddd !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+                margin: 10pt 0 !important;
+            }
+            
+            .syntax {
+                background: #f8f8f8 !important;
+                border: 1px solid #ccc !important;
+                color: black !important;
+            }
+            
+            .command-grid {
+                display: block !important;
+            }
+            
+            .command-card {
+                margin-bottom: 15pt !important;
+            }
+            
+            p, li {
+                color: black !important;
+                font-size: 11pt !important;
+                line-height: 1.4 !important;
+            }
+            
+            ul, ol {
+                margin: 10pt 0 !important;
+            }
+            
+            strong {
+                color: black !important;
+            }
+            
+            /* Prevent page breaks in the middle of examples */
+            .example-box, .highlight-box, .command-card {
+                page-break-inside: avoid;
+            }
+            
+            /* Add some spacing for readability */
+            .command-card + .command-card {
+                margin-top: 15pt !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Print to PDF Button -->
+    <button class="print-button" onclick="printToPDF()" title="Print to PDF">
+        <svg class="print-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17 6V5a2 2 0 00-2-2H5a2 2 0 00-2 2v1a2 2 0 00-2 2v8a2 2 0 002 2h2v1a2 2 0 002 2h6a2 2 0 002-2v-1h2a2 2 0 002-2V8a2 2 0 00-2-2zM5 4h10v2H5V4zm0 12H3V8h2v8zm8-8v8H7V8h6zm4 8h-2V8a2 2 0 00-2-2H7a2 2 0 00-2 2v8H3a1 1 0 01-1-1V8a1 1 0 011-1h14a1 1 0 011 1v8a1 1 0 01-1 1z"/>
+        </svg>
+        Print to PDF
+    </button>
+
+    <div class="container">
+        <h1>KQL (Kusto Query Language) Revision Notes</h1>
+
+        <h2>What is KQL?</h2>
+        <p>KQL (Kusto Query Language) is a powerful query language designed for analysing large datasets in real-time. Originally developed by Microsoft for Azure services, it's widely used across Australia in government agencies, banks, telecommunications companies, and tech organisations for log analysis, security monitoring, and business intelligence.</p>
+
+        <h2>What is KQL Used For?</h2>
+        <ul>
+            <li><strong>Security Analysis</strong>: Detecting cyber threats and suspicious activities</li>
+            <li><strong>System Monitoring</strong>: Tracking application performance and server health</li>
+            <li><strong>Business Intelligence</strong>: Analysing customer behaviour and sales data</li>
+            <li><strong>Compliance Reporting</strong>: Meeting regulatory requirements (APRA, ACMA, etc.)</li>
+            <li><strong>Troubleshooting</strong>: Identifying system issues and outages</li>
+        </ul>
+        <p>Common use cases include monitoring banking transactions for fraud detection, analysing telecommunications network performance, and tracking government service usage patterns.</p>
+
+        <h2>Basic KQL Structure</h2>
+        <p>KQL queries follow a simple pattern:</p>
+        <pre>DataTable
+| operator1
+| operator2
+| operator3</pre>
+        <p>Each line represents a step in processing your data, similar to a pipeline.</p>
+
+        <h2>Essential KQL Commands</h2>
+
+            <div class="command-card">
+                <h3>1. <strong>where</strong> - Filtering Data</h3>
+                <p>The <code>where</code> command filters rows based on specified conditions.</p>
+                <div class="syntax"><strong>Syntax</strong>: | where condition</div>
+                
+                <div class="example-box">
+                    <strong>Examples</strong>:
+                    <pre>// Find all login events from Sydney users
+SecurityEvent
+| where City == "Sydney"
+| where EventType == "Login"
+
+// Find high-value transactions in Australian dollars
+TransactionLogs
+| where Amount > 10000 and Currency == "AUD"
+
+// Find errors in the last 24 hours
+ApplicationLogs
+| where TimeGenerated > ago(1d)
+| where Level == "Error"</pre>
+                </div>
+                
+                <strong>Common operators</strong>:
+                <ul>
+                    <li><code>==</code> (equals), <code>!=</code> (not equals)</li>
+                    <li><code>></code>, <code><</code>, <code>>=</code>, <code><=</code> (comparisons)</li>
+                    <li><code>and</code>, <code>or</code> (logical operators)</li>
+                    <li><code>contains</code>, <code>startswith</code>, <code>endswith</code> (string matching)</li>
+                </ul>
+            </div>
+
+            <div class="command-card">
+                <h3>2. <strong>project</strong> - Selecting Columns</h3>
+                <p>The <code>project</code> command selects which columns to display or creates new calculated columns.</p>
+                <div class="syntax"><strong>Syntax</strong>: | project column1, column2, newColumn = expression</div>
+                
+                <div class="example-box">
+                    <strong>Examples</strong>:
+                    <pre>// Show only relevant columns for Melbourne office security events
+SecurityEvent
+| where Office == "Melbourne"
+| project TimeGenerated, UserName, EventType, IPAddress
+
+// Create calculated fields for GST analysis
+SalesData
+| project ProductName, BasePrice, GST = BasePrice * 0.1, TotalPrice = BasePrice * 1.1
+
+// Rename columns for clearer reporting
+WebLogs
+| project Timestamp = TimeGenerated, User = UserPrincipalName, Page = RequestURL</pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>3. <strong>summarize</strong> - Aggregating Data</h3>
+                <p>The <code>summarize</code> command groups data and performs calculations like counting, summing, or averaging.</p>
+                <div class="syntax"><strong>Syntax</strong>: | summarize aggregation by grouping_column</div>
+                
+                <div class="example-box">
+                    <strong>Examples</strong>:
+                    <pre>// Count login attempts by Australian state
+LoginEvents
+| summarize LoginCount = count() by State
+
+// Average transaction value by bank branch
+BankTransactions
+| summarize AvgTransaction = avg(Amount), TotalTransactions = count() by BranchCode
+
+// Daily error counts for troubleshooting
+ApplicationLogs
+| where Level == "Error"
+| summarize ErrorCount = count() by bin(TimeGenerated, 1d)
+
+// Top 5 most accessed government services
+GovernmentPortalLogs
+| summarize AccessCount = count() by ServiceName
+| top 5 by AccessCount</pre>
+                </div>
+                
+                <strong>Common aggregation functions</strong>:
+                <ul>
+                    <li><code>count()</code> - count rows</li>
+                    <li><code>sum()</code> - add values</li>
+                    <li><code>avg()</code> - calculate average</li>
+                    <li><code>max()</code>, <code>min()</code> - find highest/lowest values</li>
+                    <li><code>dcount()</code> - count distinct values</li>
+                </ul>
+            </div>
+
+            <div class="command-card">
+                <h3>4. <strong>join</strong> - Combining Tables</h3>
+                <p>The <code>join</code> command combines data from two tables based on matching columns.</p>
+                <div class="syntax"><strong>Syntax</strong>: Table1 | join Table2 on ColumnName</div>
+                
+                <div class="example-box">
+                    <strong>Examples</strong>:
+                    <pre>// Match user activities with their department information
+UserActivity
+| join (EmployeeDirectory | project UserID, Department, Location) on UserID
+| where Location == "Perth"
+
+// Combine transaction data with merchant details
+TransactionData
+| join kind=inner (MerchantDirectory | project MerchantID, BusinessName, ABN) on MerchantID
+| where BusinessName contains "Woolworths"
+
+// Link security alerts with user profiles
+SecurityAlerts
+| join (UserProfiles | project UserID, RiskLevel, Manager) on UserID
+| where RiskLevel == "High"</pre>
+                </div>
+                
+                <strong>Join types</strong>:
+                <ul>
+                    <li><code>inner</code> (default) - only matching records from both tables</li>
+                    <li><code>left</code> - all records from left table, matching from right</li>
+                    <li><code>right</code> - all records from right table, matching from left</li>
+                </ul>
+            </div>
+
+        <h3>5. <strong>sort/order by</strong> - Ordering Results</h3>
+        <p>Sort results in ascending or descending order.</p>
+        <div class="example-box">
+            <strong>Examples</strong>:
+            <pre>// Latest transactions first
+BankTransactions
+| sort by TimeGenerated desc
+
+// Highest value transactions for audit
+TransactionLogs
+| where Currency == "AUD"
+| sort by Amount desc
+| take 100</pre>
+        </div>
+
+        <h3>6. <strong>take/limit</strong> - Limiting Results</h3>
+        <p>Restrict the number of rows returned.</p>
+        <div class="example-box">
+            <strong>Examples</strong>:
+            <pre>// Show first 50 login attempts today
+LoginEvents
+| where TimeGenerated > startofday(now())
+| take 50
+
+// Top 10 error messages by frequency
+ErrorLogs
+| summarize Count = count() by ErrorMessage
+| sort by Count desc
+| limit 10</pre>
+        </div>
+
+        <h2>Practical Australian Examples</h2>
+
+        <div class="highlight-box">
+            <h3>Example 1: Banking Fraud Detection</h3>
+            <pre>// Identify suspicious after-hours transactions in major Australian cities
+BankTransactions
+| where TimeGenerated between (datetime(2024-01-15 18:00) .. datetime(2024-01-16 06:00))
+| where Amount > 5000 and Currency == "AUD"
+| where City in ("Sydney", "Melbourne", "Brisbane", "Perth")
+| summarize SuspiciousCount = count(), TotalAmount = sum(Amount) by AccountNumber, City
+| where SuspiciousCount > 3
+| sort by TotalAmount desc</pre>
+        </div>
+
+        <div class="highlight-box">
+            <h3>Example 2: Government Service Performance</h3>
+            <pre>// Analyse Medicare online service usage across states
+GovernmentServices
+| where ServiceName == "Medicare Online"
+| where TimeGenerated > ago(7d)
+| summarize 
+    TotalSessions = count(),
+    UniqueUsers = dcount(UserID),
+    AvgSessionDuration = avg(SessionDuration)
+    by State
+| sort by TotalSessions desc</pre>
+        </div>
+
+        <div class="highlight-box">
+            <h3>Example 3: Telecommunications Network Monitoring</h3>
+            <pre>// Find network outages affecting regional Australia
+NetworkEvents
+| where EventType == "Outage"
+| where Region startswith "Regional"
+| join (TowerDirectory | project TowerID, Location, Postcode) on TowerID
+| summarize 
+    OutageCount = count(),
+    AffectedCustomers = sum(CustomerCount)
+    by Location, Postcode
+| where OutageCount > 2
+| sort by AffectedCustomers desc</pre>
+        </div>
+
+        <div class="tip-box">
+            <h2>Key Tips for Beginners</h2>
+            <ol>
+                <li><strong>Start Simple</strong>: Begin with basic filtering using <code>where</code>, then add complexity</li>
+                <li><strong>Use Comments</strong>: Add <code>//</code> to document your queries for future reference</li>
+                <li><strong>Test Incrementally</strong>: Build queries step by step, checking results at each stage</li>
+                <li><strong>Mind the Data Types</strong>: Ensure you're comparing like with like (strings with strings, numbers with numbers)</li>
+                <li><strong>Time Ranges</strong>: Always consider time ranges to avoid querying excessive data</li>
+                <li><strong>Case Sensitivity</strong>: KQL is case-sensitive for operators and functions</li>
+            </ol>
+        </div>
+
+        <h2>Common Australian Data Scenarios</h2>
+        <ul>
+            <li><strong>Financial Services</strong>: Transaction monitoring, compliance reporting, fraud detection</li>
+            <li><strong>Telecommunications</strong>: Network performance, customer usage patterns, fault diagnosis</li>
+            <li><strong>Government</strong>: Service delivery metrics, security monitoring, citizen engagement analysis</li>
+            <li><strong>Healthcare</strong>: Patient flow analysis, resource utilisation, compliance tracking</li>
+            <li><strong>Retail</strong>: Sales analysis, inventory management, customer behaviour tracking</li>
+        </ul>
+
+        <p><strong>Remember</strong>: KQL is designed to handle massive datasets efficiently. Start with these basic commands, practice with realistic scenarios, and gradually build more complex queries as your confidence grows.</p>
+    </div>
+
+    <script>
+        function printToPDF() {
+            // Optional: Show a brief message
+            const originalTitle = document.title;
+            document.title = 'KQL Revision Notes - Ready to Print';
+            
+            // Trigger the browser's print dialog
+            window.print();
+            
+            // Restore original title after a short delay
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 1000);
+        }
+        
+        // Add keyboard shortcut for printing (Ctrl+P or Cmd+P)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                printToPDF();
+            }
+        });
+    </script>
+</body>
+</html>
