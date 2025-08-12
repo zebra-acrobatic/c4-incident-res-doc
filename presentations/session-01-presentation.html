@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 01 - Interactive Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .presentation-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #4a5568;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #fed7d7, #fbb6ce);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #38a169;
+        }
+
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            text-align: center;
+            color: #4a5568;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        .log-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .log-type {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .log-type:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .network-diagram {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+
+        .device {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .essential-eight {
+            background: linear-gradient(135deg, #fef5e7, #fed7aa);
+            border-left: 4px solid #ed8936;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        ul {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .interactive-element {
+            background: #e6fffa;
+            border: 2px dashed #319795;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .quiz-button {
+            background: #319795;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            background: #2c7a7b;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>🔍 Cybersecurity Logging</h1>
+            <div class="concept-box">
+                <h3>Lab 01 Learning Objectives</h3>
+                <p><strong>By the end of this presentation, you will understand:</strong></p>
+                <ul>
+                    <li>What logs are and why they're crucial in cybersecurity</li>
+                    <li>How to identify logging points in network security</li>
+                    <li>The role of logs in incident response and forensics</li>
+                    <li>The Essential Eight framework and logging requirements</li>
+                    <li>Best practices for log management and retention</li>
+                </ul>
+            </div>
+            <div class="interactive-element">
+                <p><strong>💡 Interactive Learning:</strong> This presentation will prepare you to answer all lab questions confidently!</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is a Log? -->
+        <div class="slide">
+            <h2>📝 What is a Log?</h2>
+            <div class="concept-box">
+                <h3>Definition</h3>
+                <p>A <strong>log</strong> is a record of events or activities that happen on a computer or network device. Think of it as a digital diary that automatically records everything that happens.</p>
+            </div>
+            
+            <div class="example-box">
+                <h3>🔍 Real-World Analogy</h3>
+                <p>Just like a security guard writes down everyone who enters a building, computer systems write down (log) every important event that occurs.</p>
+            </div>
+
+            <h3>Key Characteristics of Logs:</h3>
+            <div class="log-types">
+                <div class="log-type">
+                    <strong>📅 Timestamped</strong><br>
+                    Shows exactly when events occurred
+                </div>
+                <div class="log-type">
+                    <strong>📍 Detailed</strong><br>
+                    Records who, what, where, and how
+                </div>
+                <div class="log-type">
+                    <strong>🔄 Automatic</strong><br>
+                    Created without human intervention
+                </div>
+                <div class="log-type">
+                    <strong>💾 Persistent</strong><br>
+                    Stored for future reference
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Why Logs Matter in Cybersecurity -->
+        <div class="slide">
+            <h2>🛡️ Why Logs Are Critical in Cybersecurity</h2>
+            
+            <div class="highlight">
+                <h3>🚨 Detection & Response</h3>
+                <p>Logs help cybersecurity professionals detect suspicious activity, investigate security incidents, and understand how an attack happened.</p>
+            </div>
+
+            <h3>Key Benefits:</h3>
+            <ul>
+                <li><strong>Early Warning System:</strong> Detect attacks as they happen</li>
+                <li><strong>Forensic Investigation:</strong> Understand what happened after an incident</li>
+                <li><strong>Compliance:</strong> Meet regulatory requirements</li>
+                <li><strong>Performance Monitoring:</strong> Track system health and performance</li>
+                <li><strong>Legal Evidence:</strong> Provide proof in legal proceedings</li>
+            </ul>
+
+            <div class="example-box">
+                <h3>💼 Business Impact</h3>
+                <p>Without proper logging, organisations are flying blind - they can't see attacks coming, can't investigate incidents properly, and can't prove what happened in court.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: What's in a Log? -->
+        <div class="slide">
+            <h2>📊 What Information Do Logs Contain?</h2>
+            
+            <div class="concept-box">
+                <h3>Common Log Elements</h3>
+                <p>Logs can include timestamps, IP addresses, usernames, error messages, login attempts, and details about files or programs accessed.</p>
+            </div>
+
+            <div class="log-types">
+                <div class="log-type">
+                    <strong>⏰ Timestamps</strong><br>
+                    When events occurred (date/time)
+                </div>
+                <div class="log-type">
+                    <strong>🌐 IP Addresses</strong><br>
+                    Source and destination locations
+                </div>
+                <div class="log-type">
+                    <strong>👤 User Information</strong><br>
+                    Usernames, authentication details
+                </div>
+                <div class="log-type">
+                    <strong>⚠️ Error Messages</strong><br>
+                    System failures and warnings
+                </div>
+                <div class="log-type">
+                    <strong>🔐 Access Attempts</strong><br>
+                    Login successes and failures
+                </div>
+                <div class="log-type">
+                    <strong>📁 File Activities</strong><br>
+                    Files accessed, modified, deleted
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h3>📋 Sample Log Entries:</h3>
+                <code>Jul 31 14:32:08 server1 sshd[24567]: Failed password for invalid user alice from 203.0.113.45 port 50222 ssh2</code>
+            </div>
+        </div>
+
+        <!-- Slide 5: Where Are Logs Stored? -->
+        <div class="slide">
+            <h2>💾 Where Are Logs Stored?</h2>
+            
+            <div class="concept-box">
+                <p>Logs are usually stored on the device where the activity happened - like a computer, server, firewall, or switch. Some organisations also send logs to a central system for easier monitoring.</p>
+            </div>
+
+            <h3>Storage Locations:</h3>
+            <ul>
+                <li><strong>Local Storage:</strong> On the device that generated the log</li>
+                <li><strong>Network Storage:</strong> On dedicated log servers</li>
+                <li><strong>Cloud Storage:</strong> In cloud-based logging services</li>
+                <li><strong>SIEM Systems:</strong> Security Information and Event Management platforms</li>
+            </ul>
+
+            <div class="highlight">
+                <h3>🔄 centralised vs. Distributed Logging</h3>
+                <p><strong>centralised:</strong> All logs sent to one location for easy analysis<br>
+                <strong>Distributed:</strong> Logs stored locally on each device</p>
+            </div>
+
+            <div class="example-box">
+                <h3>💡 Best Practice</h3>
+                <p>Use centralised logging for better security monitoring and easier analysis, but maintain local backups for redundancy.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Logs as Evidence -->
+        <div class="slide">
+            <h2>⚖️ Logs as Digital Evidence</h2>
+            
+            <div class="highlight">
+                <h3>📋 Legal Admissibility</h3>
+                <p>Yes, logs are often used as digital evidence in investigations to show what actions were taken and by whom.</p>
+            </div>
+
+            <h3>Requirements for Legal Evidence:</h3>
+            <ul>
+                <li><strong>Integrity:</strong> Logs must be tamper-proof and unmodified</li>
+                <li><strong>Chain of Custody:</strong> Clear record of who handled the evidence</li>
+                <li><strong>Authenticity:</strong> Proof that logs are genuine and accurate</li>
+                <li><strong>Completeness:</strong> All relevant log data must be preserved</li>
+                <li><strong>Accessibility:</strong> Logs must be in a readable format</li>
+            </ul>
+
+            <div class="concept-box">
+                <h3>🔒 Protection Requirements</h3>
+                <p>To be used as evidence, logs must be protected from tampering and unauthorized access to ensure their integrity and usefulness in investigations.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Network Logging Points -->
+        <div class="slide">
+            <h2>🌐 Network Logging Points</h2>
+            
+            <div class="network-diagram">
+                <h3>Simple Network Diagram</h3>
+                <div style="margin: 20px 0;">
+                    <div class="device">PC-A</div>
+                    <span>→</span>
+                    <div class="device">Network Switch</div>
+                    <span>→</span>
+                    <div class="device">Firewall</div>
+                    <span>→</span>
+                    <div class="device">File Server</div>
+                </div>
+                <p><em>Each device can generate logs that help track network activity</em></p>
+            </div>
+
+            <h3>🎯 Key Logging Points:</h3>
+            <ul>
+                <li><strong>Endpoints (PCs/Workstations):</strong> User activities, application usage, malware detection</li>
+                <li><strong>Servers:</strong> Authentication, file access, system changes</li>
+                <li><strong>Firewalls:</strong> Network traffic, blocked connections, intrusion attempts</li>
+                <li><strong>Network Switches:</strong> Port activity, traffic patterns, MAC addresses</li>
+                <li><strong>Routers:</strong> Routing decisions, traffic flow, network performance</li>
+            </ul>
+        </div>
+
+        <!-- Slide 8: Ransomware Attack Scenario -->
+        <div class="slide">
+            <h2>🚨 Case Study: Ransomware Attack Analysis</h2>
+            
+            <div class="highlight">
+                <h3>📖 The Scenario</h3>
+                <p>A small company suffered a ransomware attack. The breach originated from PC-A where a user downloaded a malicious PDF from a phishing email, which installed a botnet client and established a reverse shell connection.</p>
+            </div>
+
+            <h3>🔍 Log Analysis by Device:</h3>
+            
+            <div class="concept-box">
+                <h4>💻 PC-A (Patient Zero)</h4>
+                <ul>
+                    <li>Antivirus logs: Malware detection alerts</li>
+                    <li>Browser history: Phishing site visits</li>
+                    <li>Email logs: Phishing email receipt</li>
+                    <li>System event logs: Suspicious process execution</li>
+                    <li>Application logs: PDF reader activity</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <h4>🗄️ File Server (Target)</h4>
+                <ul>
+                    <li>Authentication logs: Compromised credential usage</li>
+                    <li>File access logs: Unusual after-hours activity</li>
+                    <li>Audit logs: File encryption activities</li>
+                    <li>System logs: Remote access evidence</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Network Device Logs -->
+        <div class="slide">
+            <h2>🔌 Network Infrastructure Logs</h2>
+            
+            <div class="concept-box">
+                <h4>🛡️ Firewall Logs</h4>
+                <ul>
+                    <li>Traffic logs: Outbound reverse shell connections</li>
+                    <li>IDS/IPS logs: Malware signature alerts</li>
+                    <li>Connection logs: Unusual ports/protocols</li>
+                    <li>Blocked connection attempts</li>
+                </ul>
+            </div>
+
+            <div class="concept-box">
+                <h4>🔀 Network Switch Logs</h4>
+                <ul>
+                    <li>Port activity logs: High traffic volumes</li>
+                    <li>MAC address tables: Device mappings</li>
+                    <li>VLAN logs: Segmentation bypass attempts</li>
+                    <li>Spanning tree protocol changes</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h3>🎯 Investigation Strategy</h3>
+                <p>Start with the firewall logs to identify suspicious outbound connections, then trace back through switch logs to identify the source device, and finally examine endpoint logs for the attack vector.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Essential Eight Framework -->
+        <div class="slide">
+            <h2>🏛️ The Essential Eight Framework</h2>
+            
+            <div class="essential-eight">
+                <h3>📋 What is the Essential Eight?</h3>
+                <p>The Essential Eight is a set of eight cybersecurity strategies recommended by the Australian Cyber Security Centre (ACSC) to help organisations protect their systems from cyber threats.</p>
+            </div>
+
+            <h3>🔍 Logging-Related Strategies:</h3>
+            <ul>
+                <li><strong>Restrict Administrative Privileges:</strong> Requires extensive logging to monitor admin access</li>
+                <li><strong>Multi-Factor Authentication:</strong> Needs logs to track authentication events</li>
+                <li><strong>Application Control:</strong> Logs software execution and blocking events</li>
+                <li><strong>Patch Applications & OS:</strong> Logs update activities and vulnerabilities</li>
+            </ul>
+
+            <div class="concept-box">
+                <h3>📊 Maturity Model (Levels 1-3)</h3>
+                <p>The Essential Eight Maturity Model shows how well an organisation has implemented each strategy. Higher levels require more thorough logging and monitoring.</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Logging for Essential Eight -->
+        <div class="slide">
+            <h2>📈 Logging Requirements for Essential Eight</h2>
+            
+            <div class="highlight">
+                <h3>🎯 Why Logging Matters for Admin Privileges</h3>
+                <p>Logs help track who accessed admin accounts, when, and what actions were taken - making it easier to detect unauthorised or risky behaviour.</p>
+            </div>
+
+            <h3>📋 Required Log Types:</h3>
+            <div class="log-types">
+                <div class="log-type">
+                    <strong>🔐 Authentication</strong><br>
+                    Login attempts, MFA events
+                </div>
+                <div class="log-type">
+                    <strong>👑 Privileged Access</strong><br>
+                    Admin account usage
+                </div>
+                <div class="log-type">
+                    <strong>🚀 Software Execution</strong><br>
+                    Application launches, blocks
+                </div>
+                <div class="log-type">
+                    <strong>🌐 Network Traffic</strong><br>
+                    Connection attempts, data flows
+                </div>
+                <div class="log-type">
+                    <strong>⚙️ System Changes</strong><br>
+                    Configuration modifications
+                </div>
+                <div class="log-type">
+                    <strong>🔄 Patch Activities</strong><br>
+                    Update installations, failures
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Log Management Best Practices -->
+        <div class="slide">
+            <h2>🛠️ Log Management Best Practices</h2>
+            
+            <div class="concept-box">
+                <h3>⏰ Log Retention</h3>
+                <p>Log retention refers to how long logs are stored. Keeping logs for a sufficient period (e.g., 12 months) helps with long-term investigations and compliance.</p>
+            </div>
+
+            <div class="concept-box">
+                <h3>🏢 centralised Logging</h3>
+                <p>centralised logging means sending logs from multiple devices to a single system for easier monitoring, analysis, and alerting.</p>
+            </div>
+
+            <h3>🎯 Best Practices:</h3>
+            <ul>
+                <li><strong>Standardize formats:</strong> Use consistent log formats across systems</li>
+                <li><strong>Implement real-time monitoring:</strong> Set up alerts for suspicious activities</li>
+                <li><strong>Regular backups:</strong> Ensure logs are backed up and recoverable</li>
+                <li><strong>Access controls:</strong> Restrict who can view and modify logs</li>
+                <li><strong>Regular reviews:</strong> Periodically analyze logs for trends</li>
+            </ul>
+        </div>
+
+        <!-- Slide 13: Threat Detection -->
+        <div class="slide">
+            <h2>🔍 Using Logs for Threat Detection</h2>
+            
+            <div class="highlight">
+                <h3>🦠 Malware & Ransomware Detection</h3>
+                <p>Logs can show unusual behaviour like unexpected file access, strange network connections, or unauthorised login attempts - clues that malware may be active.</p>
+            </div>
+
+            <h3>🚨 Warning Signs in Logs:</h3>
+            <ul>
+                <li><strong>Unusual login times:</strong> Access during off-hours</li>
+                <li><strong>Failed authentication spikes:</strong> Potential brute force attacks</li>
+                <li><strong>Abnormal file access:</strong> Mass file encryption or deletion</li>
+                <li><strong>Suspicious network traffic:</strong> Connections to unknown external IPs</li>
+                <li><strong>Privilege escalation:</strong> Users gaining unexpected admin rights</li>
+                <li><strong>Process anomalies:</strong> Unknown applications running</li>
+            </ul>
+
+            <div class="example-box">
+                <h3>⚡ Real-Time Detection</h3>
+                <p>Modern SIEM systems can analyze logs in real-time and automatically alert security teams when suspicious patterns are detected.</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Incident Response -->
+        <div class="slide">
+            <h2>🚑 Logs in Incident Response</h2>
+            
+            <div class="concept-box">
+                <h3>📅 Timeline Reconstruction</h3>
+                <p>Logs provide a timeline of events, helping analysts understand how an attack happened and what systems were affected.</p>
+            </div>
+
+            <h3>🔍 Incident Response Process:</h3>
+            <ul>
+                <li><strong>Detection:</strong> Logs trigger alerts about suspicious activity</li>
+                <li><strong>Investigation:</strong> Analyze logs to understand the scope</li>
+                <li><strong>Containment:</strong> Use log data to isolate affected systems</li>
+                <li><strong>Eradication:</strong> Remove threats based on log evidence</li>
+                <li><strong>Recovery:</strong> Monitor logs during system restoration</li>
+                <li><strong>Lessons Learned:</strong> Review logs to improve defenses</li>
+            </ul>
+
+            <div class="highlight">
+                <h3>⚖️ Forensic Analysis</h3>
+                <p>Logs serve as digital fingerprints, providing evidence of what happened, when it occurred, and who was involved in a security incident.</p>
+            </div>
+        </div>
+
+        <!-- Slide 15: Summary & Resources -->
+        <div class="slide">
+            <h2>📚 Summary & Next Steps</h2>
+            
+            <div class="concept-box">
+                <h3>🎯 Key Takeaways</h3>
+                <ul>
+                    <li>Logs are essential records for cybersecurity monitoring and investigation</li>
+                    <li>Different devices generate different types of valuable log data</li>
+                    <li>The Essential Eight framework heavily relies on logging for effectiveness</li>
+                    <li>Proper log management includes retention, centralization, and protection</li>
+                    <li>Logs are crucial for threat detection and incident response</li>
+                </ul>
+            </div>
+
+            <div class="essential-eight">
+                <h3>🔗 Essential Eight Resource</h3>
+                <p><strong>Official Documentation:</strong><br>
+                <a href="https://www.cyber.gov.au/resources-business-and-government/essential-cybersecurity/essential-eight/essential-eight-maturity-model" target="_blank">
+                    Essential Eight Maturity Model - Australian Cyber Security Centre
+                </a></p>
+            </div>
+
+            <div class="interactive-element">
+                <h3>✅ You're Now Ready To:</h3>
+                <ul style="text-align: left; display: inline-block;">
+                    <li>Answer all lab questions about logging fundamentals</li>
+                    <li>Identify appropriate logs for different network devices</li>
+                    <li>Explain the relationship between logging and the Essential Eight</li>
+                    <li>Understand log management best practices</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" onclick="previousSlide()" id="prevBtn">← Previous</button>
+            <button class="nav-btn" onclick="nextSlide()" id="nextBtn">Next →</button>
+        </div>
+        
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">15</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = index + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

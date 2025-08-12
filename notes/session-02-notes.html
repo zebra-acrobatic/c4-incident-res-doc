@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs Study Guide - Linux & Windows</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-radius: 8px;
+            font-size: 1.4em;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h4 {
+            color: #27ae60;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .intro {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #17a2b8;
+            margin-bottom: 30px;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e74c3c;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .log-example {
+            background: #fffbf0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f39c12;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+            margin: 10px 0;
+            font-style: italic;
+        }
+        
+        ul, ol {
+            padding-left: 25px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .command-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        
+        .separator {
+            height: 3px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        
+        /* Print to PDF Button Styles */
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .print-button:active {
+            transform: translateY(0);
+        }
+        
+        /* Print-specific styles */
+        @media print {
+            body {
+                background: white !important;
+                margin: 0;
+                padding: 0;
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            
+            .container {
+                background: white !important;
+                box-shadow: none !important;
+                padding: 20px !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+            }
+            
+            .print-button {
+                display: none !important;
+            }
+            
+            h1 {
+                color: black !important;
+                border-bottom: 2px solid black !important;
+                page-break-after: avoid;
+            }
+            
+            h2 {
+                background: #f0f0f0 !important;
+                color: black !important;
+                border: 1px solid black !important;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            
+            h3 {
+                color: black !important;
+                border-left: 3px solid black !important;
+                page-break-after: avoid;
+            }
+            
+            h4 {
+                color: black !important;
+                page-break-after: avoid;
+            }
+            
+            pre {
+                background: #f8f8f8 !important;
+                color: black !important;
+                border: 1px solid #ccc !important;
+                border-left: 3px solid black !important;
+                page-break-inside: avoid;
+                font-size: 10pt;
+            }
+            
+            .log-example {
+                background: #f9f9f9 !important;
+                border: 1px solid #ccc !important;
+                color: black !important;
+                page-break-inside: avoid;
+                font-size: 10pt;
+            }
+            
+            .explanation {
+                background: #f0f8f0 !important;
+                border-left: 3px solid black !important;
+                color: black !important;
+                page-break-inside: avoid;
+            }
+            
+            .intro, .command-section, .highlight {
+                background: #f8f8f8 !important;
+                border: 1px solid #ccc !important;
+                color: black !important;
+                page-break-inside: avoid;
+            }
+            
+            .warning {
+                background: #fff8dc !important;
+                border: 1px solid #ccc !important;
+                border-left: 3px solid black !important;
+                color: black !important;
+                page-break-inside: avoid;
+            }
+            
+            .separator {
+                background: black !important;
+                height: 1px !important;
+                margin: 20px 0 !important;
+                page-break-after: avoid;
+            }
+            
+            table {
+                border-collapse: collapse !important;
+                width: 100% !important;
+                page-break-inside: avoid;
+                background: white !important;
+                box-shadow: none !important;
+            }
+            
+            th {
+                background: #f0f0f0 !important;
+                color: black !important;
+                border: 1px solid black !important;
+            }
+            
+            td {
+                border: 1px solid black !important;
+                color: black !important;
+            }
+            
+            /* Page breaks */
+            h2 {
+                page-break-before: auto;
+            }
+            
+            .separator + h2 {
+                page-break-before: always;
+            }
+            
+            /* Ensure important sections stay together */
+            .log-example + .explanation {
+                page-break-before: avoid;
+            }
+            
+            /* Remove background gradients and colors for print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        /* End of @media print */
+        
+    </style>
+    <script>
+        function printToPDF() {
+            // Show a brief message
+            const button = document.querySelector('.print-button');
+            const originalText = button.textContent;
+            button.textContent = 'Preparing PDF...';
+            button.disabled = true;
+            
+            // Small delay to show the message
+            setTimeout(() => {
+                // Trigger the browser's print dialog
+                window.print();
+                
+                // Reset button after print dialog
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 1000);
+            }, 500);
+        }
+        
+        // Add keyboard shortcut (Ctrl+P or Cmd+P)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                printToPDF();
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Print to PDF Button -->
+    <button class="print-button" onclick="printToPDF()">📄 Print to PDF</button>
+    
+    <div class="container">
+        <h1>System Logs Study Guide</h1>
+        <h2 style="text-align: center; font-size: 1.2em;">Linux and Windows Log Management for Beginners</h2>
+
+        <div class="intro">
+            <h3>What are System Logs?</h3>
+            <p>System logs are records of events, errors, and activities that occur on your computer system. They're essential for troubleshooting problems, monitoring system health, and understanding what's happening behind the scenes. Think of them as your system's diary - they tell you what happened, when it happened, and often why it happened.</p>
+        </div>
+
+        <div class="separator"></div>
+
+        <h2>🐧 Linux System Logs</h2>
+
+        <h3>Primary Log Locations</h3>
+        <p>Most Linux distributions store logs in the <code>/var/log/</code> directory. Here are the key files you need to know:</p>
+        
+        <ul>
+            <li><strong><code>/var/log/syslog</code></strong> - General system messages (Ubuntu/Debian)</li>
+            <li><strong><code>/var/log/messages</code></strong> - General system messages (RedHat/CentOS)</li>
+            <li><strong><code>/var/log/auth.log</code></strong> - Authentication attempts and security events</li>
+            <li><strong><code>/var/log/kern.log</code></strong> - Kernel messages</li>
+            <li><strong><code>/var/log/boot.log</code></strong> - Boot process messages</li>
+            <li><strong><code>/var/log/cron.log</code></strong> - Scheduled task (cron job) logs</li>
+            <li><strong><code>/var/log/apache2/</code></strong> - Web server logs (if Apache is installed)</li>
+        </ul>
+
+        <h3>Viewing Linux Logs</h3>
+
+        <h4>Basic Commands</h4>
+        <div class="command-section">
+            <pre><code># View the last 20 lines of syslog in RedHat/CentOS
+tail -n 20 /var/log/messages
+
+# Follow log in real-time (useful for monitoring)
+tail -f /var/log/messages
+
+# View entire log file
+cat /var/log/auth.log
+
+# View log with pagination
+less /var/log/messages</code></pre>
+        </div>
+
+        <h4>Using journalctl (systemd systems)</h4>
+        <p>Modern Linux systems use systemd, which provides the <code>journalctl</code> command:</p>
+        <div class="command-section">
+            <pre><code># View all journal entries
+journalctl
+
+# View entries from today
+journalctl --since today
+
+# View entries for a specific service
+journalctl -u ssh.service
+
+# Follow logs in real-time
+journalctl -f</code></pre>
+        </div>
+
+        <h3>Filtering and Searching Linux Logs</h3>
+
+        <h4>Using grep for Pattern Matching</h4>
+        <div class="command-section">
+            <pre><code># Find all failed login attempts
+grep "Failed password" /var/log/auth.log
+
+# Find SSH connection attempts
+grep "sshd" /var/log/auth.log
+
+# Search for error messages (case-insensitive)
+grep -i "error" /var/log/messages
+
+# Show context around matches (3 lines before and after)
+grep -C 3 "kernel panic" /var/log/kern.log</code></pre>
+        </div>
+
+        <h4>Advanced Filtering with awk and sed</h4>
+        <div class="command-section">
+            <pre><code># Extract specific time range (between 14:00 and 15:00)
+awk '/14:0[0-5]/ {print}' /var/log/messages
+
+# Show only timestamps and error messages
+grep "ERROR" /var/log/messages | awk '{print $1, $2, $3, $NF}'</code></pre>
+        </div>
+
+        <h3>Key Information to Look For</h3>
+
+        <h4>Security Events Example</h4>
+        <div class="log-example">
+        Mar 15 14:23:45 server01 sshd[12345]: Failed password for invalid user admin from 192.168.1.100 port 22 ssh2<br>
+        Mar 15 14:23:46 server01 sshd[12345]: Connection closed by 192.168.1.100 port 22 [preauth]
+        </div>
+        <div class="explanation">
+            <strong>What this tells us:</strong> Someone tried to log in as "admin" from IP 192.168.1.100 and failed.
+        </div>
+
+        <h4>System Error Example</h4>
+        <div class="log-example">
+            Mar 15 15:30:22 server01 kernel: [123456.789] Out of memory: Kill process 9876 (firefox) score 856 or sacrifice child
+        </div>
+        <div class="explanation">
+            <strong>What this tells us:</strong> The system ran out of memory and killed Firefox to free up resources.
+        </div>
+
+        <div class="separator"></div>
+
+        <h2>🪟 Windows System Logs</h2>
+
+        <h3>Accessing Windows Event Logs</h3>
+        <p>Windows stores logs in the <strong>Event Viewer</strong>, accessible through:</p>
+        <ul>
+            <li><strong>Method 1:</strong> Press <code>Win + R</code>, type <code>eventvwr.msc</code>, press Enter</li>
+            <li><strong>Method 2:</strong> Start Menu → Administrative Tools → Event Viewer</li>
+            <li><strong>Method 3:</strong> Control Panel → Administrative Tools → Event Viewer</li>
+        </ul>
+
+        <h3>Key Windows Log Categories</h3>
+
+        <h4>Windows Logs (Primary Focus)</h4>
+        <ul>
+            <li><strong>Application</strong> - Application-specific events and errors</li>
+            <li><strong>Security</strong> - Logon/logoff events, privilege changes, security policy changes</li>
+            <li><strong>System</strong> - Hardware, drivers, and system service events</li>
+            <li><strong>Setup</strong> - Installation and update events</li>
+        </ul>
+
+        <h4>Applications and Services Logs</h4>
+        <ul>
+            <li>Contains logs from specific applications and Windows services</li>
+            <li>Examples: Microsoft Office, Windows PowerShell, DNS Server</li>
+        </ul>
+
+        <h3>Using Windows Event Viewer</h3>
+
+        <h4>Filtering Events</h4>
+        <ol>
+            <li>Right-click on a log category (e.g., "System")</li>
+            <li>Select "Filter Current Log"</li>
+            <li>Choose criteria:
+                <ul>
+                    <li><strong>Event Level:</strong> Critical, Error, Warning, Information</li>
+                    <li><strong>Event Sources:</strong> Specific services or applications</li>
+                    <li><strong>Time Range:</strong> Last hour, 24 hours, custom range</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h4>Creating Custom Views</h4>
+        <ol>
+            <li>Click "Create Custom View" in the Actions panel</li>
+            <li>Set filters for multiple logs simultaneously</li>
+            <li>Save for future use</li>
+        </ol>
+
+        <h3>PowerShell Commands for Log Management</h3>
+        <div class="command-section">
+            <pre><code># Get last 10 system events
+Get-EventLog -LogName System -Newest 10
+
+# Find specific Event ID
+Get-EventLog -LogName System -InstanceId 6005
+
+# Search for events from specific source
+Get-EventLog -LogName Application -Source "Application Error"
+
+# Export events to CSV
+Get-EventLog -LogName Security | Export-Csv C:\logs\security.csv</code></pre>
+        </div>
+
+        <h3>Key Information to Look For</h3>
+
+        <h4>Successful Logon Example</h4>
+        <div class="log-example">
+Event ID: 4624<br>
+Source: Microsoft-Windows-Security-Auditing<br>
+Message: An account was successfully logged on.<br>
+Subject: SYSTEM<br>
+Account Name: john.smith<br>
+Logon Type: 2 (Interactive)
+        </div>
+        <div class="explanation">
+            <strong>What this tells us:</strong> User "john.smith" successfully logged on interactively (locally).
+        </div>
+
+        <h4>System Error Example</h4>
+        <div class="log-example">
+Event ID: 7034<br>
+Source: Service Control Manager<br>
+Level: Error<br>
+Message: The Print Spooler service terminated unexpectedly. This is the 3rd time in 60000 milliseconds.
+        </div>
+        <div class="explanation">
+            <strong>What this tells us:</strong> The Print Spooler service has crashed 3 times in one minute.
+        </div>
+
+        <h4>Application Crash Example</h4>
+        <div class="log-example">
+Event ID: 1000<br>
+Source: Application Error<br>
+Message: Faulting application name: notepad.exe<br>
+Faulting module name: ntdll.dll<br>
+Exception code: 0xc0000005
+        </div>
+        <div class="explanation">
+            <strong>What this tells us:</strong> Notepad crashed due to an access violation in ntdll.dll.
+        </div>
+
+        <div class="separator"></div>
+
+        <h2>📋 Common Event IDs to Remember</h2>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3>Windows Security Events</h3>
+                <table>
+                    <tr><th>Event ID</th><th>Description</th></tr>
+                    <tr><td>4624</td><td>Successful logon</td></tr>
+                    <tr><td>4625</td><td>Failed logon attempt</td></tr>
+                    <tr><td>4634</td><td>Account logged off</td></tr>
+                    <tr><td>4648</td><td>Logon using explicit credentials</td></tr>
+                    <tr><td>4672</td><td>Administrative privileges assigned</td></tr>
+                </table>
+            </div>
+
+            <div style="flex: 1; min-width: 300px;">
+                <h3>Windows System Events</h3>
+                <table>
+                    <tr><th>Event ID</th><th>Description</th></tr>
+                    <tr><td>6005</td><td>Event Log service started (system boot)</td></tr>
+                    <tr><td>6006</td><td>Event Log service stopped (system shutdown)</td></tr>
+                    <tr><td>7034</td><td>Service terminated unexpectedly</td></tr>
+                    <tr><td>7035</td><td>Service started/stopped successfully</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <h2>✅ Best Practices for Log Analysis</h2>
+
+        <div class="highlight">
+            <h3>1. Start with Recent Events</h3>
+            <p>Always check the most recent entries first, as they're most likely related to current issues.</p>
+        </div>
+
+        <div class="highlight">
+            <h3>2. Look for Patterns</h3>
+            <ul>
+                <li>Multiple failed login attempts might indicate a brute force attack</li>
+                <li>Repeated service crashes suggest hardware or software problems</li>
+                <li>Regular successful events help establish normal system behaviour</li>
+            </ul>
+        </div>
+
+        <div class="highlight">
+            <h3>3. Cross-Reference Logs</h3>
+            <p>Check multiple log sources to get a complete picture of events. For example, if you see network issues in system logs, check application logs for related errors.</p>
+        </div>
+
+        <div class="highlight">
+            <h3>4. Document Important Findings</h3>
+            <p>Keep notes of significant events, especially security incidents or recurring problems.</p>
+        </div>
+
+        <div class="highlight">
+            <h3>5. Regular Monitoring</h3>
+            <p>Set up automated alerts for critical events rather than waiting for problems to escalate.</p>
+        </div>
+
+        <div class="separator"></div>
+
+        <h2>🚀 Quick Reference Commands</h2>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 400px;">
+                <h3>Linux</h3>
+                <div class="command-section">
+                    <pre><code># Real-time monitoring
+tail -f /var/log/messages
+
+# Search for specific text
+grep "error" /var/log/messages
+
+# View systemd service logs
+journalctl -u servicename
+
+# Show logs from last hour
+journalctl --since "1 hour ago"</code></pre>
+                </div>
+            </div>
+
+            <div style="flex: 1; min-width: 400px;">
+                <h3>Windows PowerShell</h3>
+                <div class="command-section">
+                    <pre><code># Get recent system errors
+Get-EventLog -LogName System -EntryType Error -Newest 20
+
+# Find specific Event ID
+Get-EventLog -LogName Security -InstanceId 4625
+
+# Clear application log (admin required)
+Clear-EventLog -LogName Application</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Remember:</strong> System logs are powerful diagnostic tools. Regular monitoring and understanding these logs will make you much more effective at troubleshooting and maintaining systems!
+        </div>
+    </div>
+</body>
+</html>

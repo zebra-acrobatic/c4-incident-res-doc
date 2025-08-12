@@ -1,0 +1,180 @@
+<h1 id="at1-03-guide">AT1-03 Guide</h1>
+<p>This guide should assist in the completion of AT1-03.
+This task will require:</p>
+<ol>
+<li>The three CSV files described in the document.</li>
+<li><a href="https://dataexplorer.azure.com/">Azure data explorer</a>.</li>
+</ol>
+<h2 id="kql-queries">KQL Queries</h2>
+<p>You can use the KQL examples below to quickly learn the basics of Kusto Query Language (KQL) syntax. Each example shows how to select, filter, join, and summarise data, helping you understand how to write queries for Azure Data Explorer and similar platforms. Try running and modifying these queries to get comfortable with KQL’s structure and capabilities.</p>
+<ol>
+<li><p>View All students in the table <code>Students</code> from the database: </p>
+<pre><code class="lang-KQL"><span class="hljs-attribute">Students</span>
+</code></pre>
+<blockquote>
+<p>Simply listing the name of a table in a database with KQL will return the entire tables contents.</p>
+</blockquote>
+</li>
+<li><p>Filter all enrolments for only those who enrolled in &#39;Company Studies&#39;: </p>
+<pre><code class="lang-KQL"> Enrolments <span class="hljs-string">| where CourseID == 2</span>
+</code></pre>
+<blockquote>
+<p>In KQL, the <code>where</code> keyword is used to filter data in a table by specifying a condition. Only the rows that meet the condition will be included in the results. You can use where with different operators, such as <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, or <code>contains</code>, to match the data you are interested in.</p>
+</blockquote>
+</li>
+<li><p>Show student names and emails:</p>
+<pre><code class="lang-KQL"> Students <span class="hljs-string">| project Name, Email</span>
+</code></pre>
+<blockquote>
+<p>The <code>project</code> keyword in KQL is used to select specific columns from a table, allowing you to display only the fields you need in your query results.</p>
+</blockquote>
+</li>
+<li><p>List student names and their courses:</p>
+<pre><code class="lang-KQL"> Students | join kind=inner (Enrolments) <span class="hljs-keyword">on</span> StudentID
+</code></pre>
+<blockquote>
+<p>The <code>join</code> keyword in KQL is used to combine rows from two tables based on a related column, allowing you to correlate and analyse data across multiple tables.</p>
+<blockquote>
+<p><strong>Join kind options in KQL:</strong>  </p>
+<ul>
+<li><code>inner</code>: Returns only matching rows from both tables.  </li>
+<li><code>leftouter</code>: Returns all rows from the left table and matching rows from the right table.  </li>
+<li><code>rightouter</code>: Returns all rows from the right table and matching rows from the left table.  </li>
+<li><code>fullouter</code>: Returns all rows from both tables, with nulls where there is no match.  </li>
+<li><code>anti</code>: Returns rows from the left table that have no matching rows in the right table.</li>
+</ul>
+</blockquote>
+</blockquote>
+</li>
+<li><p>Show all the student&#39;s full details, the courses they are enrolled in and the full information of each course:</p>
+<pre><code class="lang-KQL"> Students | join kind=inner (Enrolments) <span class="hljs-keyword">on</span> StudentID | join kind=inner (Courses) <span class="hljs-keyword">on</span> CourseID
+</code></pre>
+</li>
+<li><p>This time, only display the student&#39;s names and courses:</p>
+<pre><code class="lang-KQL"> Students | join kind=inner (Enrolments) <span class="hljs-keyword">on</span> StudentID | join kind=inner (Courses) <span class="hljs-keyword">on</span> CourseID | project Name, CourseName
+</code></pre>
+<blockquote>
+<p>The <code>join</code> keyword combines data from multiple tables based on a common column, and the <code>project</code> keyword selects only the relevant columns, allowing you to display just the information you need from the joined results.</p>
+</blockquote>
+</li>
+<li><p>Show all the students not enrolled:</p>
+<pre><code class="lang-KQL"> Students | join kind=anti (Enrolments) <span class="hljs-keyword">on</span> StudentID
+</code></pre>
+<blockquote>
+<p><code>join kind=anti</code> returns rows from the left table (Students) that do not have matching rows in the right table (Enrollments) based on StudentID. </p>
+</blockquote>
+</li>
+<li><p>Count students per course:</p>
+<pre><code class="lang-KQL"> Enrolments | <span class="hljs-built_in">summarize</span> StudentCount = <span class="hljs-built_in">count</span>() <span class="hljs-keyword">by</span> CourseID
+</code></pre>
+<blockquote>
+<p>This query uses the <code>summarize</code> operator to count the number of students enrolled in each course, grouping the results by <code>CourseID</code> and displaying the total as <code>StudentCount</code>.</p>
+</blockquote>
+</li>
+<li><p>Generate an average grade per course:</p>
+<pre><code class="lang-KQL"> Enrolments | <span class="hljs-built_in">summarize</span> AvgGrade = avg(Grade) <span class="hljs-keyword">by</span> CourseID
+</code></pre>
+<blockquote>
+<p>This query calculates the average grade for each course by grouping the Enrolments table by CourseID and applying the avg() aggregation function to the Grade column.</p>
+</blockquote>
+</li>
+<li><p>Find the top 5 performing students</p>
+<pre><code class="lang-KQL">Enrolments | summarize AvgGrade = <span class="hljs-keyword">avg</span>(Grade) <span class="hljs-keyword">by</span> StudentID | top <span class="hljs-number">5</span> <span class="hljs-keyword">by</span> AvgGrade <span class="hljs-keyword">desc</span>
+</code></pre>
+<blockquote>
+<p>This query first calculates the average grade for each student using <code>summarize</code>, then selects the top 5 students with the highest average grades by sorting in descending order with <code>top 5 by AvgGrade desc</code>.</p>
+</blockquote>
+</li>
+<li><p>Display all students with their average grades:</p>
+<pre><code class="lang-KQL">Students | join kind=inner (Enrolments) <span class="hljs-keyword">on</span> StudentID | <span class="hljs-built_in">summarize</span> AvgGrade = avg(Grade) <span class="hljs-keyword">by</span> StudentID | project StudentID, AvgGrade
+</code></pre>
+<blockquote>
+<p>This query joins the Students table with the Enrolments table, calculates the average grade for each student using <code>summarize</code>, and then projects the StudentID and their corresponding average grade</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="kql-challenges">KQL Challenges</h2>
+<p>Here are some progressively challenging KQL exercises based on the database tables. These build on the examples above and are designed to deepen your understanding of relational queries.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Challenge</th>
+<th>Tip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟢 Beginner</td>
+<td>List all course names and their instructors.</td>
+<td>Use <code>project</code>.</td>
+</tr>
+<tr>
+<td>🟢 Beginner</td>
+<td>Find all students with a grade above 90 in any course.</td>
+<td>Use <code>where</code>, <code>join</code> and <code>project</code>.</td>
+</tr>
+<tr>
+<td>🟢 Beginner</td>
+<td>Count how many courses each student is enrolled in</td>
+<td>Use <code>summarize</code>, <code>join</code> and <code>project</code>.</td>
+</tr>
+<tr>
+<td>🟡 Intermediate</td>
+<td>Show the average grade for each student across all their courses.</td>
+<td>Use the <code>summarize</code> operator to calculate averages and join by <code>StudentID</code> to get each student&#39;s average grade.</td>
+</tr>
+<tr>
+<td>🟡 Intermediate</td>
+<td>List students who are enrolled in more than 3 courses.</td>
+<td>Use <code>summarize</code> to count enrolments per student and filter with <code>where</code> for those with more than 3 then use <code>join</code> to get their details.</td>
+</tr>
+<tr>
+<td>🟡 Intermediate</td>
+<td>Find the top 5 instructors whose courses have the highest average grades.</td>
+<td>Join the <code>Courses</code> and <code>Enrolments</code> tables, then use <code>summarize</code> to calculate average grades per instructor and sort the results.</td>
+</tr>
+<tr>
+<td>🔴 Advanced</td>
+<td>Find courses with more than 10 students and an average grade above 80. Display the course name, instructor name, student count, and average grade.</td>
+<td>Use <code>summarize</code> to count students and calculate average grades, then filter with <code>where</code> for courses meeting both conditions. After that, join with the <code>Courses</code> and <code>project</code> the required columns.</td>
+</tr>
+<tr>
+<td>🔴 Advanced</td>
+<td>Show students who have never scored below 80 in any course. Display only their names and average grades.</td>
+<td>Use <code>summarize</code> to create a a minimum grade then use <code>where</code> to find grades lower than 80. After that combine <code>Students</code> and <code>Enrolments</code> and display only the desired information.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="kql-cheat-sheet">KQL Cheat Sheet</h2>
+<ul>
+<li><strong>Basic Syntax</strong>: <ul>
+<li><code>TableName</code> to select all data from a table.</li>
+<li><code>|</code> to pipe results from one operation to the next.</li>
+</ul>
+</li>
+<li><strong>Filtering</strong>:<ul>
+<li><code>| where ColumnName == &#39;Value&#39;</code> to filter rows based on a condition.</li>
+</ul>
+</li>
+<li><strong>Selecting Columns</strong>:<ul>
+<li><code>| project Column1, Column2</code> to select specific columns.</li>
+</ul>
+</li>
+<li><strong>Joining Tables</strong>:<ul>
+<li><code>| join kind=inner (OtherTable) on CommonColumn</code> to combine data from two tables based on a common column.</li>
+</ul>
+</li>
+<li><strong>Aggregating Data</strong>:<ul>
+<li><code>| summarize NewColumn = aggregationFunction(ColumnName) by GroupingColumn</code> to perform calculations like count, avg, sum, etc., grouped by a specific column.</li>
+</ul>
+</li>
+<li><strong>Sorting</strong>:<ul>
+<li><code>| order by ColumnName asc/desc</code> to sort results in ascending or descending order.</li>
+</ul>
+</li>
+<li><strong>Limiting Results</strong>:<ul>
+<li><code>| take N</code> to limit the number of rows returned to N.</li>
+</ul>
+</li>
+</ul>

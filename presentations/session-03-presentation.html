@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL to KQL: Interactive Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #4a5568;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #4a5568;
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        .sql { color: #4fd1c7; }
+        .kql { color: #f56565; }
+        .keyword { color: #63b3ed; }
+        .string { color: #68d391; }
+        .comment { color: #a0aec0; font-style: italic; }
+
+        .interactive-example {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .sample-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .sample-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .sample-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sample-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            text-align: center;
+            margin: 10px 0;
+            color: #4a5568;
+            font-weight: bold;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .try-it-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .query-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .result-area {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-top: 10px;
+            min-height: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">8</span>
+        </div>
+
+        <!-- Slide 1: Introduction -->
+        <div class="slide active">
+            <h1>SQL to KQL: A Journey Through Query Languages</h1>
+            <div style="text-align: center; margin: 40px 0;">
+                <div style="font-size: 1.2em; margin-bottom: 30px;">
+                    Welcome! Today we'll explore two powerful query languages that help us work with data.
+                </div>
+                <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 3em; color: #667eea;">🗃️</div>
+                        <h3>SQL</h3>
+                        <p>Structured Query Language<br>for relational databases</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3em; color: #764ba2;">📊</div>
+                        <h3>KQL</h3>
+                        <p>Kusto Query Language<br>for log analytics</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is SQL? -->
+        <div class="slide">
+            <h2>What is SQL?</h2>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">
+                <span class="highlight">SQL (Structured Query Language)</span> is a standard language for managing relational databases. 
+                It's been around since the 1970s and is used everywhere!
+            </p>
+            
+            <h3>Key Concepts:</h3>
+            <ul style="font-size: 1.1em; line-height: 1.8; margin-left: 20px;">
+                <li><strong>Tables:</strong> Data organized in rows and columns</li>
+                <li><strong>Rows:</strong> Individual records</li>
+                <li><strong>Columns:</strong> Data fields/attributes</li>
+                <li><strong>Relationships:</strong> How tables connect to each other</li>
+            </ul>
+
+            <div class="interactive-example">
+                <h3>Sample Employee Table:</h3>
+                <table class="sample-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Alice Johnson</td><td>Engineering</td><td>75000</td></tr>
+                        <tr><td>2</td><td>Bob Smith</td><td>Marketing</td><td>65000</td></tr>
+                        <tr><td>3</td><td>Carol Davis</td><td>Engineering</td><td>80000</td></tr>
+                        <tr><td>4</td><td>David Wilson</td><td>Sales</td><td>70000</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 3: Basic SQL Operations -->
+        <div class="slide">
+            <h2>Basic SQL Operations</h2>            
+            <h3>1. SELECT - Getting Data</h3>
+            <p>Get all employees.</p>
+            <div class="code-block" data-lang="SQL">
+                <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> employees;
+            </div>
+            <p>Get specific columns.</p>
+            <div class="code-block" data-lang="SQL">
+                <span class="keyword">SELECT</span> name, department <span class="keyword">FROM</span> employees;
+            </div>
+            <h3>2. WHERE - Filtering Data</h3>
+            <p>Find all the engineers.</p>
+            <div class="code-block" data-lang="SQL">
+                <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> employees 
+                <span class="keyword">WHERE</span> department = <span class="string">'Engineering'</span>;
+            </div>
+            <p>Find high earners.</p>
+            <div class="code-block" data-lang="SQL">
+                <span class="keyword">SELECT</span> name, salary <span class="keyword">FROM</span> employees 
+                <span class="keyword">WHERE</span> salary > 70000;
+            </div>
+
+            <h3>3. ORDER BY - Sorting Data</h3>
+            <p>Sort by salary (highest first).</p>
+            <div class="code-block" data-lang="SQL">
+                <span class="keyword">SELECT</span> name, salary <span class="keyword">FROM</span> employees 
+                <span class="keyword">ORDER BY</span> salary <span class="keyword">DESC</span>;
+            </div>
+        </div>
+
+        <!-- Slide 4: More SQL Examples -->
+        <div class="slide">
+            <h2>More SQL Power!</h2>
+            
+            <h3>Aggregation Functions</h3>
+            <p>Count employees by department.</p>
+            <div class="code-block" data-lang="SQL">
+            <span class="keyword">SELECT</span> department, <span class="keyword">COUNT</span>(*) as employee_count
+            <span class="keyword">FROM</span> employees 
+            <span class="keyword">GROUP BY</span> department;
+            </div>
+            <p>Create and average salary based on the salary listings.</p>
+            <div class="code-block" data-lang="SQL">
+            <span class="keyword">SELECT</span> <span class="keyword">AVG</span>(salary) as average_salary 
+            <span class="keyword">FROM</span> employees;
+            </div>
+
+            <h3>Joining Tables</h3>
+            <p>Join employees with their projects using the projects table and the employes table.</p>
+            <div class="code-block" data-lang="SQL">
+            <span class="keyword">SELECT</span> e.name, p.project_name
+            <span class="keyword">FROM</span> employees e
+            <span class="keyword">JOIN</span> projects p <span class="keyword">ON</span> e.id = p.employee_id;
+            </div>
+
+            <div style="background: #e6fffa; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                <strong>💡 SQL Summary:</strong> SQL is great for structured data in traditional databases. 
+                It uses tables with predefined schemas and focuses on relationships between data.
+            </div>
+        </div>
+
+        <!-- Slide 5: Introduction to KQL -->
+        <div class="slide">
+            <h2>Enter KQL: Kusto Query Language</h2>
+            
+            <p style="font-size: 1.1em; margin-bottom: 20px;">
+                <span class="highlight">KQL (Kusto Query Language)</span> is Microsoft's query language for analysing 
+                large amounts of log and telemetry data. It's optimised for time-series data and analytics.
+            </p>
+
+            <h3>Where You'll Find KQL:</h3>
+            <ul style="font-size: 1.1em; line-height: 1.8; margin-left: 20px;">
+                <li><strong>Azure Monitor:</strong> Application and infrastructure monitoring</li>
+                <li><strong>Microsoft Sentinel:</strong> Security information and event management</li>
+                <li><strong>Application Insights:</strong> Application performance monitoring</li>
+                <li><strong>Azure Data Explorer:</strong> Big data analytics platform</li>
+            </ul>
+
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h4>SQL Focus</h4>
+                    <ul>
+                        <li>Structured relational data</li>
+                        <li>CRUD operations</li>
+                        <li>Transactions</li>
+                        <li>Normalized tables</li>
+                    </ul>
+                </div>
+                <div class="comparison-item">
+                    <h4>KQL Focus</h4>
+                    <ul>
+                        <li>Time-series & log data</li>
+                        <li>Analytics & insights</li>
+                        <li>Real-time queries</li>
+                        <li>Semi-structured data</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: KQL Basics -->
+        <div class="slide">
+            <h2>KQL Fundamentals</h2>
+            
+            <p style="font-size: 1.1em; margin-bottom: 20px;">
+                KQL uses a <strong>pipeline approach</strong> - you start with data and pipe it through operators.
+            </p>
+
+            <h3>Basic Syntax Pattern:</h3>
+            <p>Basic structure.</p>
+            <div class="code-block" data-lang="KQL">
+                TableName
+                | operator1
+                | operator2
+                | operator3
+            </div>
+
+            <h3>Sample Log Data (Application Insights):</h3>
+            <table class="sample-table">
+                <thead>
+                    <tr>
+                        <th>timestamp</th>
+                        <th>operation_Name</th>
+                        <th>duration</th>
+                        <th>resultCode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>2024-01-15T10:30:00</td><td>GET /api/users</td><td>150ms</td><td>200</td></tr>
+                    <tr><td>2024-01-15T10:31:00</td><td>POST /api/login</td><td>300ms</td><td>200</td></tr>
+                    <tr><td>2024-01-15T10:32:00</td><td>GET /api/users</td><td>2000ms</td><td>500</td></tr>
+                    <tr><td>2024-01-15T10:33:00</td><td>GET /api/orders</td><td>100ms</td><td>200</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Slide 7: KQL Operations -->
+        <div class="slide">
+            <h2>Essential KQL Operations</h2>
+            
+            <h3>1. where - Filtering (like SQL WHERE)</h3>
+            <p>Find slow requests.</p>
+            <div class="code-block" data-lang="KQL">
+                requests
+                | <span class="keyword">where</span> duration > 1000
+            </div>
+            <p>Find errors in the last hour.</p>
+            <div class="code-block" data-lang="KQL">
+                requests
+                | <span class="keyword">where</span> timestamp > <span class="keyword">ago</span>(1h) and resultCode >= 400
+            </div>
+
+            <h3>2. project - Selecting columns (like SQL SELECT)</h3>
+            <p>Select specific columns.</p>
+            <div class="code-block" data-lang="KQL">
+                requests
+                | <span class="keyword">project</span> timestamp, operation_Name, duration
+            </div>
+
+            <h3>3. summarize - Aggregation (like SQL GROUP BY)</h3>
+            <p>Count requests by result code.</p>
+            <div class="code-block" data-lang="KQL">
+                requests
+                | <span class="keyword">summarize</span> <span class="keyword">count</span>() by resultCode
+            </div>
+            <p>Average duration by operation.</p>
+            <div class="code-block" data-lang="KQL">
+                requests
+                | <span class="keyword">summarize</span> <span class="keyword">avg</span>(duration) by operation_Name
+            </div>
+        </div>
+
+        <!-- Slide 8: KQL vs SQL Comparison -->
+        <div class="slide">
+            <h2>KQL vs SQL: Side by Side</h2>
+            
+            <div class="comparison-grid">
+                <div>
+                    <h3 style="color: #4fd1c7;">SQL Version</h3>
+                    <p>Get error count by hour.</p>
+                    <div class="code-block" data-lang="SQL">
+                        <span class="keyword">SELECT</span> 
+                            <span class="keyword">DATEPART</span>(hour, timestamp) as hour,
+                                <span class="keyword">COUNT</span>(*) as error_count
+                                <span class="keyword">FROM</span> requests 
+                                <span class="keyword">WHERE</span> resultCode >= 400 
+                                    <span class="keyword">AND</span> timestamp > <span class="keyword">DATEADD</span>(day, -1, <span class="keyword">GETDATE</span>())
+                                    <span class="keyword">GROUP BY</span> <span class="keyword">DATEPART</span>(hour, timestamp)
+                                    <span class="keyword">ORDER BY</span> hour;
+                                    </div>
+                                </div>
+                            <div>
+                    <h3 style="color: #f56565;">KQL Version</h3>
+                    <p>Get error count by hour.</p>
+                    <div class="code-block" data-lang="KQL">
+                        requests
+                        | <span class="keyword">where</span> resultCode >= 400
+                        | <span class="keyword">where</span> timestamp > <span class="keyword">ago</span>(1d)
+                        | <span class="keyword">summarize</span> error_count = <span class="keyword">count</span>() 
+                            by <span class="keyword">bin</span>(timestamp, 1h)
+                            | <span class="keyword">sort</span> by timestamp
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f0fff4; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #68d391;">
+                <h4>🎯 Key Takeaways:</h4>
+                <ul style="margin-top: 10px; line-height: 1.6;">
+                    <li><strong>SQL:</strong> Great for structured data, complex relationships, transactions</li>
+                    <li><strong>KQL:</strong> Optimised for logs, time-series data, and real-time analytics</li>
+                    <li><strong>Both:</strong> Powerful tools for different types of data analysis!</li>
+                </ul>
+            </div>
+
+            <div class="try-it-section">
+                <h3>🚀 Ready to Try More?</h3>
+                <p>Both languages have much more to offer! SQL has advanced joins, stored procedures, and complex transactions. KQL has powerful time-series functions, machine learning operators, and visualization capabilities.</p>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" id="prev-btn" onclick="previousSlide()">← Previous</button>
+            <button class="nav-button" id="next-btn" onclick="nextSlide()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n - 1].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = n;
+            document.getElementById('prev-btn').disabled = (n === 1);
+            document.getElementById('next-btn').disabled = (n === totalSlides);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(1);
+    </script>
+</body>
+</html>

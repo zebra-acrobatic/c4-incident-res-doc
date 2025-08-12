@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs - Student Revision Notes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .log-example {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #3498db;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        strong {
+            color: #2c3e50;
+        }
+        .tip-box {
+            background-color: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(to right, #3498db, transparent);
+            margin: 30px 0;
+            border: none;
+        }
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+            transition: background-color 0.3s ease;
+            z-index: 1000;
+        }
+        .print-button:hover {
+            background: #2980b9;
+        }
+        /* Print styles for PDF output */
+        @media print {
+            body {
+                background-color: white !important;
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            .container {
+                box-shadow: none !important;
+                padding: 0 !important;
+                background: white !important;
+            }
+            .print-button {
+                display: none !important;
+            }
+            .log-example {
+                background-color: #f8f8f8 !important;
+                color: #333 !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+            .highlight {
+                background-color: #f0f0f0 !important;
+                border-left: 4px solid #999 !important;
+            }
+            .tip-box {
+                background-color: #f9f9f9 !important;
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+                color: #333 !important;
+            }
+            h1 {
+                border-bottom: 2px solid #333 !important;
+            }
+            h2 {
+                border-left: 4px solid #666 !important;
+            }
+            .section-divider {
+                background: #ccc !important;
+                height: 1px !important;
+            }
+            /* Ensure content fits well on pages */
+            @page {
+                margin: 2cm;
+                size: A4;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">📄 Print to PDF</button>
+    
+    <div class="container">
+        <h1>System Logs - Student Revision Notes</h1>
+
+        <h2>What Are System Logs?</h2>
+        <p>System logs are detailed records of events, activities, and transactions that occur within computer systems, applications, and network devices. Think of them as a digital diary that automatically records everything happening on your system - from user logins to error messages, security events, and system changes.</p>
+        
+        <p>Logs are essential for system administrators, cybersecurity professionals, and IT support staff to monitor system health, troubleshoot problems, and investigate security incidents.</p>
+
+        <hr class="section-divider">
+
+        <h2>Types of System Logs</h2>
+
+        <h3>1. System Logs</h3>
+        <p>Record operating system events, startup/shutdown processes, hardware changes, and driver installations.</p>
+        <div class="highlight"><strong>Example:</strong> Service start/stop events, system boot messages, hardware failures</div>
+
+        <h3>2. Application Logs</h3>
+        <p>Document events from specific software applications and services.</p>
+        <div class="highlight"><strong>Example:</strong> Database connection errors, web server requests, email server activities</div>
+
+        <h3>3. Security Logs</h3>
+        <p>Track security-related events including authentication attempts, privilege changes, and access violations.</p>
+        <div class="highlight"><strong>Example:</strong> Failed login attempts, account lockouts, permission changes</div>
+
+        <h3>4. Network Logs</h3>
+        <p>Monitor network traffic, connections, and communication between devices.</p>
+        <div class="highlight"><strong>Example:</strong> Firewall blocks, DNS queries, network connection attempts</div>
+
+        <h3>5. Audit Logs</h3>
+        <p>Record user actions and system changes for compliance and accountability purposes.</p>
+        <div class="highlight"><strong>Example:</strong> File modifications, policy changes, administrative actions</div>
+
+        <hr class="section-divider">
+
+        <h2>Common Log Sources</h2>
+        <ul>
+            <li><strong>Operating Systems</strong> (Windows Event Logs, Linux syslog)</li>
+            <li><strong>Web Servers</strong> (Apache, IIS, Nginx)</li>
+            <li><strong>Databases</strong> (MySQL, SQL Server, Oracle)</li>
+            <li><strong>Firewalls and Network Devices</strong> (Cisco, Fortinet, pfSense)</li>
+            <li><strong>Applications</strong> (Custom software, enterprise applications)</li>
+            <li><strong>Antivirus Software</strong> (Windows Defender, Symantec, McAfee)</li>
+        </ul>
+
+        <hr class="section-divider">
+
+        <h2>General Information Found in Logs</h2>
+        <p>Most log entries contain standard fields that help identify and contextualise events:</p>
+
+        <ul>
+            <li><strong>Timestamp:</strong> When the event occurred (date and time)</li>
+            <li><strong>Source:</strong> Which system, service, or application generated the log</li>
+            <li><strong>Event ID/Type:</strong> Specific identifier for the type of event</li>
+            <li><strong>Severity Level:</strong> Importance of the event (Critical, Error, Warning, Information)</li>
+            <li><strong>User/Process:</strong> Who or what caused the event</li>
+            <li><strong>Description:</strong> Detailed explanation of what happened</li>
+            <li><strong>IP Addresses:</strong> Source and destination network locations</li>
+            <li><strong>File Paths:</strong> Location of affected files or resources</li>
+        </ul>
+
+        <hr class="section-divider">
+
+        <h2>Windows Log Examples</h2>
+
+        <h3>Windows Event Viewer Logs</h3>
+
+        <p><strong>Security Log - Successful Login:</strong></p>
+        <div class="log-example">Log Name: Security<br>
+Source: Microsoft-Windows-Security-Auditing<br>
+Date: 15/08/2024 09:23:41<br>
+Event ID: 4624<br>
+Task Category: Logon<br>
+Level: Information<br>
+User: MELBOURNE-PC\sarah.jones<br>
+Description: An account was successfully logged on.<br>
+Subject: Account Name: sarah.jones<br>
+Logon Type: 2 (Interactive)<br>
+Workstation Name: MELBOURNE-PC<br>
+Source Network Address: 192.168.1.105</div>
+
+        <p><strong>System Log - Service Start:</strong></p>
+        <div class="log-example">Log Name: System<br>
+Source: Service Control Manager<br>
+Date: 15/08/2024 08:15:32<br>
+Event ID: 7036<br>
+Level: Information<br>
+Description: The Windows Firewall service entered the running state.</div>
+
+        <p><strong>Application Log - Error Example:</strong></p>
+        <div class="log-example">Log Name: Application<br>
+Source: Application Error<br>
+Date: 15/08/2024 14:27:18<br>
+Event ID: 1000<br>
+Level: Error<br>
+Description: Faulting application name: outlook.exe<br>
+Faulting module name: mso.dll<br>
+Exception code: 0xc0000005<br>
+Fault offset: 0x001a2b4c<br>
+Faulting process id: 0x1234</div>
+
+        <hr class="section-divider">
+
+        <h2>Linux Log Examples</h2>
+
+        <h3>Syslog Examples</h3>
+
+        <p><strong>Authentication Success (Ubuntu):</strong></p>
+        <div class="log-example">Aug 15 09:23:41 sydney-server sshd[2847]: Accepted publickey for admin from 203.123.45.67 port 54321 ssh2: RSA SHA256:abc123def456
+Aug 15 09:23:41 sydney-server systemd-logind[892]: New session 15 of user admin.</div>
+
+        <p><strong>System Error:</strong></p>
+        <div class="log-example">Aug 15 14:15:22 brisbane-web kernel: [12345.678910] EXT4-fs error (device sda1): ext4_journal_check_start:83: comm apache2: Detected aborted journal
+Aug 15 14:15:22 brisbane-web systemd[1]: apache2.service: Main process exited, code=exited, status=1/FAILURE</div>
+
+        <p><strong>Network Activity:</strong></p>
+        <div class="log-example">Aug 15 11:30:15 perth-firewall kernel: [FIREWALL-BLOCK] IN=eth0 OUT= MAC=00:1b:21:12:34:56 SRC=118.23.45.67 DST=192.168.1.10 PROTO=TCP SPT=80 DPT=443</div>
+
+        <p><strong>Cron Job Execution:</strong></p>
+        <div class="log-example">Aug 15 02:00:01 adelaide-backup CRON[3456]: (root) CMD (/usr/local/bin/daily-backup.sh)
+Aug 15 02:05:23 adelaide-backup systemd[1]: Started Daily System Backup.</div>
+
+        <hr class="section-divider">
+
+        <h2>Importance of Logs in Fault Finding</h2>
+
+        <h3>1. Problem Identification</h3>
+        <p>Logs help identify exactly what went wrong and when it occurred.</p>
+        <ul>
+            <li><strong>Example:</strong> Application crash logs show which module failed and the error code</li>
+            <li><strong>Example:</strong> System logs reveal hardware failures or driver issues</li>
+        </ul>
+
+        <h3>2. Root Cause Analysis</h3>
+        <p>Sequential log entries help trace the chain of events leading to a problem.</p>
+        <ul>
+            <li><strong>Example:</strong> Following timestamps to see what happened before a service crash</li>
+            <li><strong>Example:</strong> Identifying configuration changes that caused system instability</li>
+        </ul>
+
+        <h3>3. Performance Monitoring</h3>
+        <p>Logs reveal performance bottlenecks and resource usage patterns.</p>
+        <ul>
+            <li><strong>Example:</strong> Database query logs showing slow-running queries</li>
+            <li><strong>Example:</strong> Web server logs indicating high response times</li>
+        </ul>
+
+        <h3>4. System Health Monitoring</h3>
+        <p>Regular log analysis helps identify potential issues before they become critical.</p>
+        <ul>
+            <li><strong>Example:</strong> Increasing memory usage warnings in system logs</li>
+            <li><strong>Example:</strong> Growing number of failed authentication attempts</li>
+        </ul>
+
+        <hr class="section-divider">
+
+        <h2>Importance of Logs in Cybersecurity Investigations</h2>
+
+        <h3>1. Incident Detection</h3>
+        <p>Security logs are often the first indicator of a cyber attack or breach.</p>
+        <ul>
+            <li><strong>Example:</strong> Multiple failed login attempts from unusual IP addresses</li>
+            <li><strong>Example:</strong> Unusual network traffic patterns in firewall logs</li>
+        </ul>
+
+        <h3>2. Attack Timeline Reconstruction</h3>
+        <p>Logs help investigators understand how an attack progressed.</p>
+        <ul>
+            <li><strong>Example:</strong> Initial compromise through email → privilege escalation → data exfiltration</li>
+            <li><strong>Example:</strong> Following malware installation and lateral movement through network logs</li>
+        </ul>
+
+        <h3>3. Evidence Collection</h3>
+        <p>Digital forensics relies heavily on log evidence for legal proceedings.</p>
+        <ul>
+            <li><strong>Example:</strong> Proving unauthorised access through authentication logs</li>
+            <li><strong>Example:</strong> Demonstrating data theft through file access logs</li>
+        </ul>
+
+        <h3>4. Impact Assessment</h3>
+        <p>Logs help determine what systems and data were affected during an incident.</p>
+        <ul>
+            <li><strong>Example:</strong> Database access logs showing which records were viewed</li>
+            <li><strong>Example:</strong> File system logs indicating which documents were copied</li>
+        </ul>
+
+        <h3>5. Attack Attribution</h3>
+        <p>Log analysis can help identify attack methods and potentially the attackers.</p>
+        <ul>
+            <li><strong>Example:</strong> Unique malware signatures in antivirus logs</li>
+            <li><strong>Example:</strong> Specific attack patterns matching known threat groups</li>
+        </ul>
+
+        <hr class="section-divider">
+
+        <h2>Key Log Analysis Tips for Beginners</h2>
+        <div class="tip-box">
+            <ol>
+                <li><strong>Start with timestamps</strong> - Follow the chronological order of events</li>
+                <li><strong>Focus on error and warning messages</strong> - These often indicate problems</li>
+                <li><strong>Look for patterns</strong> - Repeated events may indicate ongoing issues</li>
+                <li><strong>Check correlation</strong> - Compare logs from different sources for the same timeframe</li>
+                <li><strong>Understand normal vs abnormal</strong> - Learn what typical log entries look like</li>
+                <li><strong>Use filtering and searching</strong> - Don't get overwhelmed by large log files</li>
+                <li><strong>Document findings</strong> - Keep notes of significant discoveries during analysis</li>
+            </ol>
+        </div>
+
+        <hr class="section-divider">
+
+        <h2>Conclusion</h2>
+        <p>System logs are invaluable resources for maintaining system health, troubleshooting problems, and investigating security incidents. Understanding how to read and analyse logs is a fundamental skill for anyone working in IT support, system administration, or cybersecurity. Regular log monitoring and analysis can prevent small issues from becoming major problems and provide crucial evidence during security investigations.</p>
+    </div>
+</body>
+</html>
