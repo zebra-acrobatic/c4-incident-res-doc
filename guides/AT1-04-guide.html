@@ -1,0 +1,144 @@
+<h1 id="at1-03-guide">AT1-03 Guide</h1>
+<p>This guide should assist in the completion of AT1-03.
+This task will require:</p>
+<ol>
+<li>The three CSV files described in the document.</li>
+<li><a href="https://dataexplorer.azure.com/">Azure data explorer</a>.</li>
+</ol>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<ol>
+<li>Filter data using where</li>
+<li>Aggregate data using summarise</li>
+<li>Create new columns using extend</li>
+<li>Sort results using order by</li>
+<li>Use top to find top performers</li>
+<li>Visualise data using render</li>
+</ol>
+<h2 id="kql-queries">KQL Queries</h2>
+<p>You will now learn more about KQL syntax using the commands from the learning objectives. Examples are provided to help you understand how to write queries for Azure Data Explorer and similar platforms. Try running and modifying these queries to get comfortable with KQL’s structure and capabilities.</p>
+<ol>
+<li><p>Filter Enrolments by Grade </p>
+<pre><code class="lang-KQL"> Enrolments
+ <span class="hljs-string">| where Grade &gt; 90</span>
+ <span class="hljs-string">| join kind=inner (Students) on StudentID</span>
+ <span class="hljs-string">| project Name, Grade</span>
+</code></pre>
+<blockquote>
+<p>This query filters the <code>Enrolments</code> table to find all enrolments with a grade greater than 90, then joins it with the <code>Students</code> table to get the names of those students. The <code>project</code> keyword is used to display only the student&#39;s name and their grade.</p>
+</blockquote>
+</li>
+<li><p>Average Grade per Course: </p>
+<pre><code class="lang-KQL"> Enrolments
+ | <span class="hljs-type">summarize</span> AvgGrade = avg(Grade) <span class="hljs-built_in">by</span> CourseID
+ | <span class="hljs-type">join</span> kind=inner (Courses) on CourseID
+ | <span class="hljs-type">project</span> CourseName, AvgGrade
+ | <span class="hljs-type">order</span> <span class="hljs-built_in">by</span> AvgGrade desc
+</code></pre>
+<blockquote>
+<p>This query calculates the average grade for each course by summarising the <code>Enrolments</code> table, grouping by <code>CourseID</code>. It then joins with the <code>Courses</code> table to get the course names and orders the results by average grade in descending order.</p>
+</blockquote>
+</li>
+<li><p>Top 5 Students by Average Grade:</p>
+<pre><code class="lang-KQL"> Enrolments
+ | <span class="hljs-type">summarize</span> AvgGrade = avg(Grade) <span class="hljs-built_in">by</span> StudentID
+ | <span class="hljs-type">top</span> <span class="hljs-number">5</span> <span class="hljs-built_in">by</span> AvgGrade desc
+ | <span class="hljs-type">join</span> kind=inner (Students) on StudentID
+ | <span class="hljs-type">project</span> Name, AvgGrade
+</code></pre>
+<blockquote>
+<p>This query calculates the average grade for each student, selects the top 5 students with the highest average grades, and joins with the <code>Students</code> table to display their names along with their average grades.</p>
+</blockquote>
+</li>
+<li><p>Add a Grade Category:</p>
+<pre><code class="lang-KQL"> Enrolments
+ | extend GradeCategory = case(
+ Grade &gt;= <span class="hljs-number">85</span>, <span class="hljs-string">"High Distinction"</span>,
+ Grade &gt;= <span class="hljs-number">75</span>, <span class="hljs-string">"Distinction"</span>,
+ Grade &gt;= <span class="hljs-number">65</span>, <span class="hljs-string">"Credit"</span>,
+ Grade &gt;= <span class="hljs-number">50</span>, <span class="hljs-string">"Pass"</span>,
+ <span class="hljs-string">"Fail"</span>
+ )
+ | join kind=inner (Students) on StudentID
+ | project Name, Grade, GradeCategory
+</code></pre>
+<blockquote>
+<p>This query uses the <code>extend</code> operator to create a new column called <code>GradeCategory</code> based on the <code>Grade</code> values. It categorises grades into &quot;High Distinction&quot;, &quot;Distinction&quot;, &quot;Credit&quot;, &quot;Pass&quot;, or &quot;Fail&quot;. The results are then joined with the <code>Students</code> table to display student names along with their grades and categories.</p>
+</blockquote>
+</li>
+<li><p>Number of Students per Course:</p>
+<pre><code class="lang-KQL"> Enrolments
+ | <span class="hljs-keyword">summarize</span> EnrolmentCount = <span class="hljs-keyword">count</span>() <span class="hljs-keyword">by</span> CourseID
+ | join kind=inner (Courses) <span class="hljs-keyword">on</span> CourseID
+ | project CourseName, EnrolmentCount
+ | <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> EnrolmentCount <span class="hljs-keyword">desc</span>
+</code></pre>
+<blockquote>
+<p>This query counts the number of students enrolled in each course by summarising the <code>Enrolments</code> table, grouping by <code>CourseID</code>. It then joins with the <code>Courses</code> table to get the course names and orders the results by enrolment count in descending order.</p>
+</blockquote>
+</li>
+<li><p>Visualise Average Grade per Course:</p>
+<pre><code class="lang-KQL"> Enrolments
+ | <span class="hljs-type">summarize</span> AvgGrade = avg(Grade) <span class="hljs-built_in">by</span> CourseID
+ | <span class="hljs-type">join</span> kind=inner (Courses) on CourseID
+ | <span class="hljs-type">project</span> CourseName, AvgGrade
+ | <span class="hljs-type">order</span> <span class="hljs-built_in">by</span> AvgGrade desc
+ | <span class="hljs-type">render</span> barchart
+</code></pre>
+<blockquote>
+<p>This query calculates the average grade for each course, joins with the <code>Courses</code> table to get course names, and orders the results by average grade in descending order. The <code>render barchart</code> command visualises the average grades as a bar chart.</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="kql-challenges">KQL Challenges</h2>
+<p>Here are some progressively challenging KQL exercises based on the database tables. These build on the examples above and are designed to deepen your understanding of relational queries.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Challenge</th>
+<th>Tip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟢 Beginner</td>
+<td>List students who scored above 90 in any course.</td>
+<td>Use where and join to filter and combine data.</td>
+</tr>
+<tr>
+<td>🟢 Beginner</td>
+<td>Display all students enrolled in the course &quot;Trip Studies&quot;.</td>
+<td>Use join and where to filter by course name.</td>
+</tr>
+<tr>
+<td>🟢 Beginner</td>
+<td>Show students enrolled in &quot;Drug Studies&quot;, sorted by grade descending.</td>
+<td>Use order by to sort results.</td>
+</tr>
+<tr>
+<td>🟡 Intermediate</td>
+<td>Find the average grade for each course.</td>
+<td>Use summarize and join for aggregation.</td>
+</tr>
+<tr>
+<td>🟡 Intermediate</td>
+<td>Add a column that categorizes grades (e.g., A, B, C, D, E and F).</td>
+<td>Use extend and case() for conditional logic.</td>
+</tr>
+<tr>
+<td>🟡 Intermediate</td>
+<td>List the top 5 most enrolled courses.</td>
+<td>Use <code>summarize</code>, <code>count()</code>, and <code>top.</code></td>
+</tr>
+<tr>
+<td>🔴 Advanced</td>
+<td>Show average grade per instructor.</td>
+<td>Use multi-table joins and aggregation.</td>
+</tr>
+<tr>
+<td>🔴 Advanced</td>
+<td>Show average grade per instructor as a barchart.</td>
+<td>Use multi-table joins and aggregation with a barchart.</td>
+</tr>
+</tbody>
+</table>

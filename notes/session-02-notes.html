@@ -8,330 +8,145 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            color: #333;
+            background-color: #f9f9f9;
         }
-        
         .container {
             background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
         h1 {
             color: #2c3e50;
             border-bottom: 3px solid #3498db;
             padding-bottom: 10px;
             margin-bottom: 30px;
-            font-size: 2.5em;
         }
-        
         h2 {
             color: #34495e;
-            margin-top: 35px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
-            color: white;
-            border-radius: 8px;
-            font-size: 1.4em;
-        }
-        
-        h3 {
-            color: #2980b9;
-            margin-top: 25px;
+            margin-top: 30px;
             margin-bottom: 15px;
             border-left: 4px solid #3498db;
             padding-left: 15px;
         }
-        
-        h4 {
-            color: #27ae60;
+        h3 {
+            color: #2980b9;
             margin-top: 20px;
             margin-bottom: 10px;
         }
-        
-        .intro {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 5px solid #17a2b8;
-            margin-bottom: 30px;
-        }
-        
-        code {
-            background: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 4px;
+        .log-example {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
             font-family: 'Courier New', monospace;
-            color: #e74c3c;
-            font-size: 0.9em;
-        }
-        
-        pre {
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
+            font-size: 13px;
             margin: 15px 0;
+            overflow-x: auto;
             border-left: 4px solid #3498db;
         }
-        
-        pre code {
-            background: none;
-            color: inherit;
-            padding: 0;
-        }
-        
-        .log-example {
-            background: #fffbf0;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #f39c12;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-        
-        .explanation {
-            background: #e8f5e8;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 4px solid #27ae60;
-            margin: 10px 0;
-            font-style: italic;
-        }
-        
-        ul, ol {
-            padding-left: 25px;
-        }
-        
-        li {
-            margin-bottom: 8px;
-        }
-        
         .highlight {
-            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #ff6b6b;
-            margin: 20px 0;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background: #34495e;
-            color: white;
-            font-weight: bold;
-        }
-        
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .command-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 1px solid #dee2e6;
-        }
-        
-        .warning {
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
+            background-color: #fff3cd;
+            padding: 10px;
             border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        strong {
+            color: #2c3e50;
+        }
+        .tip-box {
+            background-color: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 15px;
             margin: 15px 0;
         }
-        
-        .separator {
-            height: 3px;
-            background: linear-gradient(to right, #667eea, #764ba2);
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(to right, #3498db, transparent);
             margin: 30px 0;
-            border-radius: 2px;
+            border: none;
         }
-        
-        /* Print to PDF Button Styles */
         .print-button {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #3498db;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
+            padding: 12px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+            transition: background-color 0.3s ease;
             z-index: 1000;
         }
-        
         .print-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #2980b9;
         }
-        
-        .print-button:active {
-            transform: translateY(0);
-        }
-        
-        /* Print-specific styles */
+        /* Print styles for PDF output */
         @media print {
             body {
-                background: white !important;
-                margin: 0;
-                padding: 0;
+                background-color: white !important;
                 font-size: 12pt;
                 line-height: 1.4;
             }
-            
             .container {
-                background: white !important;
                 box-shadow: none !important;
-                padding: 20px !important;
-                margin: 0 !important;
-                border-radius: 0 !important;
+                padding: 0 !important;
+                background: white !important;
             }
-            
             .print-button {
                 display: none !important;
             }
-            
-            h1 {
-                color: black !important;
-                border-bottom: 2px solid black !important;
-                page-break-after: avoid;
-            }
-            
-            h2 {
-                background: #f0f0f0 !important;
-                color: black !important;
-                border: 1px solid black !important;
-                page-break-after: avoid;
-                page-break-inside: avoid;
-            }
-            
-            h3 {
-                color: black !important;
-                border-left: 3px solid black !important;
-                page-break-after: avoid;
-            }
-            
-            h4 {
-                color: black !important;
-                page-break-after: avoid;
-            }
-            
-            pre {
-                background: #f8f8f8 !important;
-                color: black !important;
-                border: 1px solid #ccc !important;
-                border-left: 3px solid black !important;
-                page-break-inside: avoid;
-                font-size: 10pt;
-            }
-            
             .log-example {
-                background: #f9f9f9 !important;
+                background-color: #f8f8f8 !important;
+                color: #333 !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+            .highlight {
+                background-color: #f0f0f0 !important;
+                border-left: 4px solid #999 !important;
+            }
+            .tip-box {
+                background-color: #f9f9f9 !important;
                 border: 1px solid #ccc !important;
-                color: black !important;
-                page-break-inside: avoid;
-                font-size: 10pt;
-            }
-            
-            .explanation {
-                background: #f0f8f0 !important;
-                border-left: 3px solid black !important;
-                color: black !important;
                 page-break-inside: avoid;
             }
-            
-            .intro, .command-section, .highlight {
-                background: #f8f8f8 !important;
-                border: 1px solid #ccc !important;
-                color: black !important;
-                page-break-inside: avoid;
-            }
-            
-            .warning {
-                background: #fff8dc !important;
-                border: 1px solid #ccc !important;
-                border-left: 3px solid black !important;
-                color: black !important;
-                page-break-inside: avoid;
-            }
-            
-            .separator {
-                background: black !important;
-                height: 1px !important;
-                margin: 20px 0 !important;
+            h1, h2, h3 {
                 page-break-after: avoid;
+                color: #333 !important;
             }
-            
-            table {
-                border-collapse: collapse !important;
-                width: 100% !important;
-                page-break-inside: avoid;
-                background: white !important;
-                box-shadow: none !important;
+            h1 {
+                border-bottom: 2px solid #333 !important;
             }
-            
-            th {
-                background: #f0f0f0 !important;
-                color: black !important;
-                border: 1px solid black !important;
-            }
-            
-            td {
-                border: 1px solid black !important;
-                color: black !important;
-            }
-            
-            /* Page breaks */
             h2 {
-                page-break-before: auto;
+                border-left: 4px solid #666 !important;
             }
-            
-            .separator + h2 {
-                page-break-before: always;
+            .section-divider {
+                background: #ccc !important;
+                height: 1px !important;
             }
-            
-            /* Ensure important sections stay together */
-            .log-example + .explanation {
-                page-break-before: avoid;
-            }
-            
-            /* Remove background gradients and colors for print */
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
+            /* Ensure content fits well on pages */
+            @page {
+                margin: 2cm;
+                size: A4;
             }
         }
-        /* End of @media print */
+    </style>
         
     </style>
     <script>

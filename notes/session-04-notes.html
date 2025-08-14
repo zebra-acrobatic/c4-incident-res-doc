@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KQL Commands Revision Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .log-example {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #3498db;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        strong {
+            color: #2c3e50;
+        }
+        .tip-box {
+            background-color: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(to right, #3498db, transparent);
+            margin: 30px 0;
+            border: none;
+        }
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+            transition: background-color 0.3s ease;
+            z-index: 1000;
+        }
+        .print-button:hover {
+            background: #2980b9;
+        }
+        /* Print styles for PDF output */
+        @media print {
+            body {
+                background-color: white !important;
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            .container {
+                box-shadow: none !important;
+                padding: 0 !important;
+                background: white !important;
+            }
+            .print-button {
+                display: none !important;
+            }
+            .log-example {
+                background-color: #f8f8f8 !important;
+                color: #333 !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+            .highlight {
+                background-color: #f0f0f0 !important;
+                border-left: 4px solid #999 !important;
+            }
+            .tip-box {
+                background-color: #f9f9f9 !important;
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+                color: #333 !important;
+            }
+            h1 {
+                border-bottom: 2px solid #333 !important;
+            }
+            h2 {
+                border-left: 4px solid #666 !important;
+            }
+            .section-divider {
+                background: #ccc !important;
+                height: 1px !important;
+            }
+            /* Ensure content fits well on pages */
+            @page {
+                margin: 2cm;
+                size: A4;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">📄 Print to PDF</button>
+    
+    <div class="container">
+        <h1>KQL Commands Revision Guide</h1>
+        <p class="subtitle"><strong>Essential Commands for Data Analysis: summarise, extend, order, top, and render</strong></p>
+
+        <hr>
+
+        <h2>Overview</h2>
+        <p>Kusto Query Language (KQL) is a powerful tool for analysing large datasets. This guide covers five fundamental commands that every beginner should master: <code>summarise</code>, <code>extend</code>, <code>order</code>, <code>top</code>, and <code>render</code> (specifically for bar charts).</p>
+
+        <hr>
+
+        <h2>1. The <code>summarise</code> Command</h2>
+        <p>The <code>summarise</code> command groups data and performs aggregate calculations. It's like creating a summary table in Excel.</p>
+
+        <h3>Basic Syntax</h3>
+        <pre><code>TableName
+| summarise AggregateFunction(Column) by GroupingColumn</code></pre>
+
+        <h3>Common Aggregate Functions</h3>
+        <ul>
+            <li><code>count()</code> - counts rows</li>
+            <li><code>sum()</code> - adds up values</li>
+            <li><code>avg()</code> - calculates average</li>
+            <li><code>max()</code> / <code>min()</code> - finds highest/lowest values</li>
+        </ul>
+
+        <h3>Examples</h3>
+
+        <div class="example">
+            <strong>Example 1: Counting website visits by country</strong>
+            <pre><code>WebTraffic
+| summarise VisitCount = count() by Country</code></pre>
+            <div class="result">Result: Shows how many visits came from each country</div>
+        </div>
+
+        <div class="example">
+            <strong>Example 2: Average response time by server</strong>
+            <pre><code>ServerLogs
+| summarise AvgResponseTime = avg(ResponseTimeMs) by ServerName</code></pre>
+            <div class="result">Result: Shows the average response time for each server</div>
+        </div>
+
+        <div class="example">
+            <strong>Example 3: Total sales by product category</strong>
+            <pre><code>SalesData
+| summarise TotalRevenue = sum(SaleAmount) by ProductCategory</code></pre>
+            <div class="result">Result: Shows total revenue for each product category</div>
+        </div>
+
+        <hr>
+
+        <h2>2. The <code>extend</code> Command</h2>
+        <p>The <code>extend</code> command adds new calculated columns to your data without changing existing columns. Think of it as adding a formula column in a spreadsheet.</p>
+
+        <h3>Basic Syntax</h3>
+        <pre><code>TableName
+| extend NewColumnName = Calculation</code></pre>
+
+        <h3>Examples</h3>
+
+        <div class="example">
+            <strong>Example 1: Converting temperature from Celsius to Fahrenheit</strong>
+            <pre><code>WeatherData
+| extend TempFahrenheit = (TempCelsius * 9/5) + 32</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 2: Calculating profit margin</strong>
+            <pre><code>ProductSales
+| extend ProfitMargin = ((SalePrice - Cost) / SalePrice) * 100</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 3: Extracting day of week from datetime</strong>
+            <pre><code>EventLogs
+| extend DayOfWeek = dayofweek(EventDateTime)</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 4: Creating status categories</strong>
+            <pre><code>ServerMetrics
+| extend StatusCategory = case(
+    CPUUsage > 90, "Critical",
+    CPUUsage > 70, "High",
+    CPUUsage > 50, "Medium",
+    "Normal"
+)</code></pre>
+        </div>
+
+        <hr>
+
+        <h2>3. The <code>order</code> Command</h2>
+        <p>The <code>order</code> command sorts your results. Use <code>asc</code> for ascending (lowest to highest) or <code>desc</code> for descending (highest to lowest).</p>
+
+        <h3>Basic Syntax</h3>
+        <pre><code>TableName
+| order by ColumnName asc/desc</code></pre>
+
+        <h3>Examples</h3>
+
+        <div class="example">
+            <strong>Example 1: Ordering by timestamp (most recent first)</strong>
+            <pre><code>ApplicationLogs
+| order by Timestamp desc</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 2: Ordering by multiple columns</strong>
+            <pre><code>StudentGrades
+| order by Subject asc, Grade desc</code></pre>
+            <div class="result">Result: Sorts by subject alphabetically, then by grade (highest first) within each subject</div>
+        </div>
+
+        <div class="example">
+            <strong>Example 3: Ordering calculated values</strong>
+            <pre><code>EmployeeData
+| extend FullName = strcat(FirstName, " ", LastName)
+| order by FullName asc</code></pre>
+        </div>
+
+        <hr>
+
+        <h2>4. The <code>top</code> Command</h2>
+        <p>The <code>top</code> command returns the highest or lowest values from a dataset. It's particularly useful for finding "top 10" lists.</p>
+
+        <h3>Basic Syntax</h3>
+        <pre><code>TableName
+| top NumberOfRows by ColumnName asc/desc</code></pre>
+
+        <h3>Examples</h3>
+
+        <div class="example">
+            <strong>Example 1: Top 5 cities by population</strong>
+            <pre><code>CityData
+| top 5 by Population desc</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 2: Bottom 3 performing stores by sales</strong>
+            <pre><code>StoreSales
+| top 3 by TotalSales asc</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 3: Top 10 error types by frequency</strong>
+            <pre><code>ErrorLogs
+| summarise ErrorCount = count() by ErrorType
+| top 10 by ErrorCount desc</code></pre>
+        </div>
+
+        <hr>
+
+        <h2>5. The <code>render</code> Command for Bar Charts</h2>
+        <p>The <code>render</code> command creates visualisations from your data. We'll focus on bar charts, which are excellent for comparing categories.</p>
+
+        <h3>Basic Syntax</h3>
+        <pre><code>TableName
+| render barchart</code></pre>
+
+        <h3>Bar Chart Examples</h3>
+
+        <div class="example">
+            <strong>Example 1: Simple bar chart of sales by region</strong>
+            <pre><code>RegionalSales
+| summarise TotalSales = sum(SalesAmount) by Region
+| render barchart</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 2: Top 10 products by sales volume</strong>
+            <pre><code>ProductSales
+| summarise UnitsSold = sum(Quantity) by ProductName
+| top 10 by UnitsSold desc
+| render barchart</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 3: Monthly website traffic</strong>
+            <pre><code>WebsiteMetrics
+| extend Month = format_datetime(Date, "yyyy-MM")
+| summarise PageViews = sum(Views) by Month
+| order by Month asc
+| render barchart</code></pre>
+        </div>
+
+        <div class="example">
+            <strong>Example 4: Error distribution by severity level</strong>
+            <pre><code>SystemErrors
+| summarise ErrorCount = count() by SeverityLevel
+| order by ErrorCount desc
+| render barchart</code></pre>
+        </div>
+
+        <hr>
+
+        <h2>Combining Commands: Real-World Examples</h2>
+
+        <div class="example">
+            <h3>Example 1: Top 5 Australian cities by average temperature</h3>
+            <pre><code>WeatherReadings
+| where Country == "Australia"
+| extend TempFahrenheit = (TempCelsius * 9/5) + 32
+| summarise AvgTemp = avg(TempFahrenheit) by City
+| top 5 by AvgTemp desc
+| render barchart</code></pre>
+        </div>
+
+        <div class="example">
+            <h3>Example 2: Monthly revenue trend with profit margins</h3>
+            <pre><code>MonthlySales
+| extend Month = format_datetime(SaleDate, "yyyy-MM")
+| extend ProfitMargin = ((Revenue - Costs) / Revenue) * 100
+| summarise TotalRevenue = sum(Revenue), AvgMargin = avg(ProfitMargin) by Month
+| order by Month asc
+| render barchart</code></pre>
+        </div>
+
+        <div class="example">
+            <h3>Example 3: Server performance analysis</h3>
+            <pre><code>ServerPerformance
+| extend PerformanceCategory = case(
+    ResponseTime > 1000, "Slow",
+    ResponseTime > 500, "Average", 
+    "Fast"
+)
+| summarise ServerCount = count() by PerformanceCategory
+| order by ServerCount desc
+| render barchart</code></pre>
+        </div>
+
+        <hr>
+
+        <h2>Key Tips for Success</h2>
+        <div class="tips-section">
+            <ol>
+                <li><strong>Always test with small datasets first</strong> - Use <code>| take 100</code> to limit results whilst learning</li>
+                <li><strong>Use meaningful column names</strong> - <code>summarise VisitorCount = count()</code> is better than <code>summarise count()</code></li>
+                <li><strong>Order your operations logically</strong> - Filter first, then extend, summarise, order, and finally render</li>
+                <li><strong>Remember Australian date formats</strong> - KQL typically uses ISO format (YYYY-MM-DD)</li>
+                <li><strong>Bar charts work best with categorical data</strong> - Use them to compare different groups or categories</li>
+            </ol>
+        </div>
+
+        <hr>
+
+        <h2>Common Patterns to Remember</h2>
+
+        <div class="pattern-box">
+            <h3>Pattern 1: Analysis with visualisation</h3>
+            <pre><code>DataTable
+| summarise Metric = aggregation(Column) by Category
+| top N by Metric desc
+| render barchart</code></pre>
+        </div>
+
+        <div class="pattern-box">
+            <h3>Pattern 2: Time-based analysis</h3>
+            <pre><code>DataTable
+| extend TimeGroup = format_datetime(DateColumn, "format")
+| summarise Aggregation = function(Value) by TimeGroup
+| order by TimeGroup asc
+| render barchart</code></pre>
+        </div>
+
+        <div class="pattern-box">
+            <h3>Pattern 3: Calculated fields with grouping</h3>
+            <pre><code>DataTable
+| extend NewField = calculation
+| summarise Summary = function(NewField) by GroupBy
+| order by Summary desc
+| render barchart</code></pre>
+        </div>
+
+        <p><strong>Practice these patterns with different datasets to build your confidence with KQL!</strong></p>
+    </div>
+</body>
+</html>

@@ -93,18 +93,12 @@ Here are some progressively challenging KQL exercises based on the database tabl
 | 🔴 Advanced | Show students who have never scored below 80 in any course. Display only their names and average grades. | Use `summarize` to create a a minimum grade then use `where` to find grades lower than 80. After that combine `Students` and `Enrolments` and display only the desired information.
 
 ## KQL Cheat Sheet
-- **Basic Syntax**: 
-  - `TableName` to select all data from a table.
-  - `|` to pipe results from one operation to the next.
-- **Filtering**:
-  - `| where ColumnName == 'Value'` to filter rows based on a condition.
-- **Selecting Columns**:
-  - `| project Column1, Column2` to select specific columns.
-- **Joining Tables**:
-  - `| join kind=inner (OtherTable) on CommonColumn` to combine data from two tables based on a common column.
-- **Aggregating Data**:
-  - `| summarize NewColumn = aggregationFunction(ColumnName) by GroupingColumn` to perform calculations like count, avg, sum, etc., grouped by a specific column.
-- **Sorting**:
-  - `| order by ColumnName asc/desc` to sort results in ascending or descending order.
-- **Limiting Results**:
-  - `| take N` to limit the number of rows returned to N.
+This cheat sheet provides a quick reference for common KQL operations and syntax. It can be used as a guide while writing queries in Azure Data Explorer or similar platforms.
+| Operation | Syntax | Description |
+|-------------|------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| Select Table | `TableName` | Returns all rows and columns from the specified table. |
+| Filter Rows | `TableName \| where Condition` | Filters rows based on a specified condition. |
+| Project Columns | `TableName \| project Column1, Column2` | Selects specific columns from a table to display in the results. |
+| Join Tables | `TableName \| join kind=inner (Table2) on CommonColumn` | Combines rows from two tables based on a common column, allowing you to correlate data across tables. |
+| Summarise Data | `TableName \| summarize AggregationFunction(Column) by GroupingColumn` | Aggregates data by applying functions like `count()`, `avg()`, `sum()`, etc., and groups the results by a specified column. |
+| Order Results | `TableName \| order by Column asc\| desc` | Sorts the results by a specified column in ascending or descending order. |
